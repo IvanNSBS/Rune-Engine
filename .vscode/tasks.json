@@ -1,0 +1,41 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build debug",
+            "type": "shell",
+            "command": "./_scripts/build_debug.sh",
+            "group": "build",
+        },
+        {
+            "label": "build release",
+            "type": "shell",
+            "command": "./_scripts/build.sh",
+            "group": "build",
+        },
+        {
+            "label": "build and run release",
+            "type": "shell",
+            "command": "./_scripts/build.sh && ./_scripts/run.sh",
+            "group": "build",
+        },
+        {
+            "label": "build and run debug",
+            "type": "shell",
+            "command": "./_scripts/build_debug.sh && ./_scripts/run_debug.sh",
+            "group": "build",
+        },
+        {
+            "label": "run debug",
+            "type": "shell",
+            "command": "./_scripts/run_debug.sh",
+            "group": "build",
+        },
+        {
+            "label": "run release",
+            "type": "shell",
+            "command": "./_scripts/run.sh",
+            "group": "build",
+        }
+    ]
+}
