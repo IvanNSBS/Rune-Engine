@@ -43,5 +43,6 @@ compile_commands.json
 CTestTestfile.cmake
 _deps
 
-out
+_[Oo][Uu][Tt]
 [Bb][Uu][Ii][Ll][Dd]
+[Cc][Oo][Nn][Ff][Ii][Gg]
