@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10.0)
 project(RuneRenderer VERSION 0.1.0)
 
-add_executable(RuneRenderer src/main.cpp)
+add_executable(RuneRenderer src/main.cpp src/window/window.cpp)
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 set(EXECUTABLE_OUTPUT_PATH ../../build/)
