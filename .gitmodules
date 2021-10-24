@@ -1,3 +1,6 @@
 [submodule "RuneRenderer/vendor/glfw"]
 	path = RuneRenderer/vendor/glfw
 	url = https://github.com/glfw/glfw.git
+[submodule "RuneRenderer/vendor/glm"]
+	path = RuneRenderer/vendor/glm
+	url = https://github.com/g-truc/glm.git
