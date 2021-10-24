@@ -1,7 +1,7 @@
 #include <glad.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
-#include "window/window.h"
+#include "application/application.h"
 #include "shaders/shaderprogram.h"
 
 void processInput(GLFWwindow* window);
@@ -14,7 +14,7 @@ int main()
 {
     std::cout << "Starting the app...\n";
 
-    Window window(SCR_WIDTH, SCR_HEIGHT, "Rune Renderer");
+    Application::CreateApp(SCR_WIDTH, SCR_HEIGHT, "Rune Renderer");
     ShaderProgram program("C:\\Users\\ivans\\Desktop\\Projetos\\Rune-Engine\\RuneRenderer\\resources\\df_shaders\\df_sh1.glsl");
     bool success = program.Compile();
     program.Use();
@@ -58,11 +58,11 @@ int main()
 
     // render loop
     // -----------
-    while (!window.ShouldClose())
+    while (!Application::ShouldClose())
     {
         // input
         // -----
-        processInput(window.GetWindowHandler());
+        processInput(Application::GetWindow()->GetWindowHandler());
 
         // render
         // ------
@@ -75,7 +75,7 @@ int main()
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
-        glfwSwapBuffers(window.GetWindowHandler());
+        glfwSwapBuffers(Application::GetWindow()->GetWindowHandler());
         glfwPollEvents();
     }
 
@@ -96,5 +96,5 @@ int main()
 void processInput(GLFWwindow* window)
 {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-        glfwSetWindowShouldClose(window, true);
+        Application::Close();
 }
