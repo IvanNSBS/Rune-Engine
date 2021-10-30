@@ -3,6 +3,7 @@
 #include <iostream>
 #include "application/application.h"
 #include "shaders/shaderprogram.h"
+#include "application/fileloader.h"
 
 void processInput(GLFWwindow* window);
 
@@ -14,8 +15,10 @@ int main()
 {
     std::cout << "Starting the app...\n";
 
+    FileLoader::Init();
     Application::CreateApp(SCR_WIDTH, SCR_HEIGHT, "Rune Renderer");
-    ShaderProgram program("C:\\Users\\ivans\\Desktop\\Projetos\\Rune-Engine\\RuneRenderer\\resources\\df_shaders\\df_sh1.glsl");
+    ShaderProgram program("df_shaders\\df_sh1.glsl");
+
     bool success = program.Compile();
     program.Use();
 

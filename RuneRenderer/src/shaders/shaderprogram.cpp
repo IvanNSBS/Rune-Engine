@@ -1,5 +1,7 @@
 #include "shaderprogram.h"
 
+#include "../application/fileloader.h"
+
 #include <fstream>
 #include <sstream>
 #include <iostream>
@@ -19,10 +21,6 @@ ShaderProgram::~ShaderProgram()
 
 bool ShaderProgram::Compile() 
 {
-    std::string vertexCode;
-    std::string fragmentCode;
-    std::ifstream shaderFile;
-
     bool vertexPresent = false;
     bool fragmentPresent = false;
 
@@ -31,72 +29,63 @@ bool ShaderProgram::Compile()
 
     int state = 0; // 0 = both shaders, 1 = vertex, 2 = fragment
 
-    shaderFile.open(m_filePath);
+    const char* file_bytes = (char*)FileLoader::ReadFile(m_filePath.c_str());
+    std::istringstream shaderFile = std::istringstream(file_bytes);
 
-    if (shaderFile.is_open())
+    while (getline(shaderFile, line))
     {
-        while (getline(shaderFile, line))
-        {
-            if (line.find("END_VERTEX") != std::string::npos || line.find("END_FRAG") != std::string::npos) {
-                state = 0;
-                continue;
-            }
-            if (line.find("BEGIN_VERTEX") != std::string::npos) {
-                if (state != 0) {
-                    std::cout << "ERROR::SHADER::CANT_BEGIN_VERTEX_WITHOUT_FINISHNG_FRAGMENT\n" << std::endl;
-                    return m_compiled;
-                }
-
-                vertexPresent = true;
-                state = 1;
-                continue;
-            }
-            if (line.find("BEGIN_FRAG") != std::string::npos) {
-                if (state != 0) {
-                    std::cout << "ERROR::SHADER::CANT_BEGIN_FRAGMENT_WITHOUT_FINISHNG_VERTEX\n" << std::endl;
-                    return m_compiled;
-                }
-
-                fragmentPresent = true;
-                state = 2;
-                continue;
-            }
-
-            size_t index = 0;
-            switch (state)
-            {
-            case 0:
-                vShaderStream << line << '\n';
-                fShaderStream << line << '\n';
-                break;
-
-            case 1:
-                index = line.find("vertMain");
-                if (index != std::string::npos)
-                    line.replace(index, 8, "main");
-
-                vShaderStream << line << '\n';
-                break;
-
-            case 2:
-                index = line.find("fragMain");
-                if (index != std::string::npos)
-                    line.replace(index, 8, "main");
-
-                fShaderStream << line << '\n';
-                break;
-            }
+        if (line.find("END_VERTEX") != std::string::npos || line.find("END_FRAG") != std::string::npos) {
+            state = 0;
+            continue;
         }
-        shaderFile.close();
+        if (line.find("BEGIN_VERTEX") != std::string::npos) {
+            if (state != 0) {
+                std::cout << "ERROR::SHADER::CANT_BEGIN_VERTEX_WITHOUT_FINISHNG_FRAGMENT\n" << std::endl;
+                return m_compiled;
+            }
 
-        vertexCode = vShaderStream.str();
-        fragmentCode = fShaderStream.str();
+            vertexPresent = true;
+            state = 1;
+            continue;
+        }
+        if (line.find("BEGIN_FRAG") != std::string::npos) {
+            if (state != 0) {
+                std::cout << "ERROR::SHADER::CANT_BEGIN_FRAGMENT_WITHOUT_FINISHNG_VERTEX\n" << std::endl;
+                return m_compiled;
+            }
+
+            fragmentPresent = true;
+            state = 2;
+            continue;
+        }
+
+        size_t index = 0;
+        switch (state)
+        {
+        case 0:
+            vShaderStream << line << '\n';
+            fShaderStream << line << '\n';
+            break;
+
+        case 1:
+            index = line.find("vertMain");
+            if (index != std::string::npos)
+                line.replace(index, 8, "main");
+
+            vShaderStream << line << '\n';
+            break;
+
+        case 2:
+            index = line.find("fragMain");
+            if (index != std::string::npos)
+                line.replace(index, 8, "main");
+
+            fShaderStream << line << '\n';
+            break;
+        }
     }
-    else
-    {
-        std::cout << "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ\n" << std::endl;
-        return m_compiled;
-    }
+    delete file_bytes;
+    shaderFile.clear();
 
     if (!vertexPresent || !fragmentPresent)
     {
@@ -104,6 +93,8 @@ bool ShaderProgram::Compile()
         return m_compiled;
     }
 
+    std::string vertexCode = vShaderStream.str();
+    std::string fragmentCode = fShaderStream.str();
     const char* vertexShaderSource = vertexCode.c_str();
     const char* fragmentShaderSource = fragmentCode.c_str();
 
