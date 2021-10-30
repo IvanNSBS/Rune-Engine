@@ -46,6 +46,22 @@ private:
         } 
     }
 
+    static const char* FindFile(const char* rel_path) { 
+        if(added_files.find(rel_path) == added_files.end())
+            return nullptr;
+
+        return added_files[rel_path].c_str();
+    }
+
+    static std::ifstream* GetFileByteStream(const char* rel_path){
+        const char* file_path = FindFile(rel_path);
+        if(file_path == nullptr)
+            return nullptr;
+
+        std::ifstream *input = new std::ifstream(file_path, std::ios::binary);
+        return input;
+    }
+
 public:
     static void Init() 
     {
@@ -57,32 +73,20 @@ public:
         }
     }
 
-    static const char* GetFile(const char* rel_path) { 
-        if(added_files.find(rel_path) == added_files.end())
-            return nullptr;
-
-        return added_files[rel_path].c_str();
-    }
-
     static unsigned char* ReadFile(const char* rel_path)
     {
-        if(added_files.find(rel_path) == added_files.end())
+        std::ifstream* fileStream = GetFileByteStream(rel_path);
+        if(fileStream == nullptr)
             return nullptr;
 
-        const char* file_path = added_files[rel_path].c_str();
-
-        std::ifstream input(file_path, std::ios::binary);
-        std::vector<char> bytes((std::istreambuf_iterator<char>(input)), (std::istreambuf_iterator<char>()));
-        input.close();
+        std::vector<char> bytes((std::istreambuf_iterator<char>(*fileStream)), (std::istreambuf_iterator<char>()));
+        fileStream->close();
 
         unsigned char* out = new unsigned char[bytes.size()];
         memcpy(out, &bytes[0], bytes.size());
         out[bytes.size()-1] = 0;
 
+        delete fileStream;
         return out;
-    }
-
-    void LoadImage(char* image_id) {
-    
     }
 };
