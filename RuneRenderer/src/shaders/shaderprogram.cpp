@@ -1,6 +1,6 @@
 #include "shaderprogram.h"
 
-#include "../application/fileloader.h"
+#include "../filesystem/fileloader.h"
 
 #include <fstream>
 #include <sstream>
