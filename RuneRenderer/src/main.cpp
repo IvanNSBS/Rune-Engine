@@ -4,6 +4,8 @@
 #include "application/application.h"
 #include "shaders/shaderprogram.h"
 #include "filesystem/fileloader.h"
+#include "application/input/inputmanager.h"
+#include "application/input/inputcommand.h"
 
 void processInput(GLFWwindow* window);
 
@@ -11,12 +13,29 @@ void processInput(GLFWwindow* window);
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
+class CloseCommand : public InputCommand 
+{
+public:
+    CloseCommand(int key) : InputCommand(key){ }
+    void Execute() override {
+        Application::Close();
+    }
+};
+
 int main()
 {
     std::cout << "Starting the app...\n";
 
-    FileLoader::Init();
+    CloseCommand close(Key::ESCAPE);
+    // TODO: Make a CreateApp and Init Application Function. Perhaps 
+    //       calling all inits could be done for the sandbox?
     Application::CreateApp(SCR_WIDTH, SCR_HEIGHT, "Rune Renderer");
+    FileLoader::Init();
+    InputManager::Init();
+
+    InputManager::RegisterCommand(&close);
+    InputManager::SetCommandKey(&close, Key::F10);
+
     ShaderProgram program("df_shaders\\df_sh1.glsl");
 
     bool success = program.Compile();
@@ -65,7 +84,7 @@ int main()
     {
         // input
         // -----
-        processInput(Application::GetWindow()->GetWindowHandler());
+        InputManager::HandleInputs();
 
         // render
         // ------
@@ -92,12 +111,4 @@ int main()
     // ------------------------------------------------------------------
     glfwTerminate();
     return 0;
-}
-
-// process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
-// ---------------------------------------------------------------------------------------------------------
-void processInput(GLFWwindow* window)
-{
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-        Application::Close();
 }
