@@ -5,7 +5,7 @@ project(RuneRenderer VERSION 0.1.0)
 add_executable(
     RuneRenderer 
     src/main.cpp 
-    src/application/window.cpp 
+    src/platforms/window/windowswindow.cpp 
     src/shaders/shaderprogram.cpp 
 )
 

@@ -1,46 +1,32 @@
 #pragma once
 
-#include <stdint.h>
-#include <glad.h>
-#include <GLFW/glfw3.h>
-#include <iostream>
-
-class Application;
-
-class Window
+struct WindowProps
 {
-private:
-    uint32_t _width, _height;
-    char* _title;
-    GLFWwindow* _window;
-    friend class Application;
-
-    Window(){ }
-    Window(uint32_t width, uint32_t height, char* name) {
-        Create(width, height, name);
-    }
-
-    void Create(uint32_t width, uint32_t height, char* name);
-    
-    static inline void default_frame_callback(GLFWwindow* wnd, int width, int height) {
-        glViewport(0, 0, width, height);
-    }
-
 public:
+    unsigned int width = 1280;
+    unsigned int height = 720;
+    char* title = "Rune Engine";
+    bool vsync = true;
+};
 
-    ~Window(){
-        glfwSetWindowShouldClose(_window, true);
-    }
+class Window 
+{
+protected:
+    WindowProps _props;
+    
+public:
+    virtual ~Window() { };
+    virtual void OnUpdate() = 0;
+    virtual void Close() = 0;
+    virtual bool ShouldClose() = 0;
+    virtual const bool GetVsync() const = 0;
+    virtual void SetVsync(bool activate) = 0;
+    virtual inline const unsigned int GetWidth() const { return _props.width; }
+    virtual inline const unsigned int GetHeight() const { return _props.height; }
 
-    inline bool ShouldClose() {
-        return glfwWindowShouldClose(_window);
-    }
-
-    inline void Close() {
-        glfwSetWindowShouldClose(_window, true);
-    }
-
-    inline GLFWwindow* GetWindowHandler() const {
-        return _window;
-    }
+    // TODO: 
+    // This will likely become part of the event system 
+    // and will need a refactor later for other types of windows 
+    // besides GLFW
+    // virtual void SetResizeCallback(void(*callback_ptr)(int, int));
 };

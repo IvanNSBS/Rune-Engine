@@ -1,11 +1,14 @@
 #pragma once
 
 #include "../application.h"
+#include "../../platforms/window/windowswindow.h"
 #include "inputcommand.h"
+#include "keys.h"
 #include <map>
 #include <vector>
 #include <string>
-#include "keys.h"
+
+class Application;
 
 class InputManager
 {
@@ -37,7 +40,10 @@ private:
 public:
     static bool Init()
     {
-        wnd = Application::GetWindow()->GetWindowHandler();
+        Window* window = Application::GetWindow();
+        WindowsWindow* windowsWindow = static_cast<WindowsWindow*>(window);
+        wnd = windowsWindow->GetWindowHandler();
+
         cmds.clear();
 
         return true;

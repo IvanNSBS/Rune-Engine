@@ -29,10 +29,8 @@ int main()
     CloseCommand close(Key::ESCAPE);
     // TODO: Make a CreateApp and Init Application Function. Perhaps 
     //       calling all inits could be done for the sandbox?
-    Application::CreateApp(SCR_WIDTH, SCR_HEIGHT, "Rune Renderer");
-    FileLoader::Init();
+    Application::StartApp(SCR_WIDTH, SCR_HEIGHT, "Rune Renderer");
     InputManager::Init();
-
     InputManager::RegisterCommand(&close);
     InputManager::SetCommandKey(&close, Key::F10);
 
@@ -95,14 +93,11 @@ int main()
         glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
-        // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
-        // -------------------------------------------------------------------------------
-        glfwSwapBuffers(Application::GetWindow()->GetWindowHandler());
-        glfwPollEvents();
+        Application::Update();
     }
 
     // optional: de-allocate all resources once they've outlived their purpose:
-    // ------------------------------------------------------------------------
+    // ------------------------------------------------------------------'------
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
     glDeleteBuffers(1, &EBO);
