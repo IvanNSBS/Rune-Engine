@@ -1,7 +1,7 @@
 #pragma once
 
 #include <glfw/glfw3.h>
-#include "../../application/input/keyboard.h"
+#include "../keyboard.h"
 
 class WindowsKeyboard : public Keyboard
 {

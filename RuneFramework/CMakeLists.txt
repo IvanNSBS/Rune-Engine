@@ -1,13 +1,13 @@
 cmake_minimum_required(VERSION 3.10.0)
 set(CMAKE_CXX_STANDARD 17)
-project(RuneRenderer VERSION 0.1.0)
+project(RuneFramework VERSION 0.1.0)
 
 add_executable(
-    RuneRenderer 
+    RuneFramework 
     src/main.cpp 
-    src/shaders/shaderprogram.cpp 
-    src/platforms/windows/windowswindow.cpp 
-    src/platforms/windows/windowskeyboard.cpp 
+    src/rendering/shaders/shaderprogram.cpp 
+    src/rendering/window/windows/windowswindow.cpp 
+    src/application/input/windows/windowskeyboard.cpp 
 )
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)

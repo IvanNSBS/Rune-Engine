@@ -15,7 +15,7 @@
 // This is also preventing initializing the input manager through
 // application.h because of a circular dependency, altough it can be
 // fixed by using the .cpp file
-#include "../../platforms/windows/windowskeyboard.h"
+#include "./windows/windowskeyboard.h"
 
 // TODO: Static class or make it a singleton?
 class InputManager

@@ -1,6 +1,6 @@
-#include "windowswindow.h"
-#include "windowskeyboard.h"
-#include "../../application/application.h"
+#include "../../../rendering/window/windows/windowswindow.h"
+#include "../../../application/application.h"
+#include "./windowskeyboard.h"
 
 WindowsKeyboard::WindowsKeyboard() 
 {

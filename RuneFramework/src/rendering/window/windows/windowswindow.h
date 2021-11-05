@@ -1,9 +1,9 @@
 #pragma once
 
-#include <iostream>
 #include <glad.h>
+#include <iostream>
 #include <GLFW/glfw3.h>
-#include "../../application/window.h"
+#include "../window.h"
 
 
 class WindowsWindow : public Window

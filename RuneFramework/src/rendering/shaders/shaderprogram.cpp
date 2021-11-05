@@ -1,11 +1,10 @@
 #include "shaderprogram.h"
 
-#include "../filesystem/fileloader.h"
-
+#include <glad.h>
 #include <fstream>
 #include <sstream>
 #include <iostream>
-#include <glad.h>
+#include "../../filesystem/fileloader.h"
 
 ShaderProgram::ShaderProgram(const char* shaderFilePath) : 
     m_programId(0), m_filePath(shaderFilePath), m_compiled(false) 

@@ -19,7 +19,7 @@ private:
     }
 
     static std::string GetAssetFolderPath() {
-        return "C:\\Users\\ivans\\Desktop\\Projetos\\Rune-Engine\\RuneRenderer\\resources";
+        return "C:\\Users\\ivans\\Desktop\\Projetos\\Rune-Engine\\RuneFramework\\resources";
     }
 
     static void RegisterAssetFiles() {

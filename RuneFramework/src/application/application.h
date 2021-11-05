@@ -1,11 +1,14 @@
 #pragma once
 
-#include "window.h"
+#include "../platformdetector.h"
+#include "../rendering/window/window.h"
+
 #include "../filesystem/fileloader.h"
 #include "input/inputmanager.h"
 
+
 // TODO: Application Class shouldn't need to include platform specific stuff
-#include "../platforms/windows/windowswindow.h"
+#include "../rendering/window/windows/windowswindow.h"
 
 class Application 
 {
@@ -23,7 +26,9 @@ public:
     static void StartApp(int window_width, int window_height, char* window_name)
     {
         // TODO: Add IFDEF clauses to switch between API and Window Contexts
+        #ifdef RUNE_PLATFORM_WINDOWS
         Application::_window = new WindowsWindow(window_name, window_width, window_height);
+        #endif
         FileLoader::Init();
         InputManager::Init();
     } 

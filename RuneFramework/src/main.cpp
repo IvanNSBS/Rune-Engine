@@ -1,13 +1,12 @@
 #include <glad.h>
 #include <GLFW/glfw3.h>
+
 #include <iostream>
-#include "application/application.h"
-#include "shaders/shaderprogram.h"
 #include "filesystem/fileloader.h"
+#include "application/application.h"
+#include "rendering/shaders/shaderprogram.h"
 #include "application/input/inputmanager.h"
 #include "application/input/inputcommand.h"
-
-void processInput(GLFWwindow* window);
 
 // settings
 const unsigned int SCR_WIDTH = 800;
