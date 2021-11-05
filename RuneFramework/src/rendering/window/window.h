@@ -5,8 +5,17 @@ struct WindowProps
 public:
     unsigned int width = 1280;
     unsigned int height = 720;
-    char* title = "Rune Engine";
     bool vsync = true;
+    char* title = "Rune Engine";
+    
+    WindowProps() { }
+    WindowProps(unsigned int w, unsigned int h, char* t, bool v = true)
+    {
+        width = w;
+        height =h;
+        title = t;
+        vsync = v;
+    }
 };
 
 class Window 
@@ -23,6 +32,8 @@ public:
     virtual void SetVsync(bool activate) = 0;
     virtual inline const unsigned int GetWidth() const { return _props.width; }
     virtual inline const unsigned int GetHeight() const { return _props.height; }
+
+    static Window* Create(WindowProps props);
 
     // TODO: 
     // This will likely become part of the event system 

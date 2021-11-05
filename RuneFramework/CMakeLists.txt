@@ -6,7 +6,10 @@ add_executable(
     RuneFramework 
     src/main.cpp 
     src/rendering/shaders/shaderprogram.cpp 
+    src/rendering/window/window.cpp 
     src/rendering/window/windows/windowswindow.cpp 
+
+    src/application/input/keyboard.cpp 
     src/application/input/windows/windowskeyboard.cpp 
 )
 

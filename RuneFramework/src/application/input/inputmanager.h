@@ -2,20 +2,13 @@
 
 #include "../application.h"
 #include "inputcommand.h"
+#include "keyboard.h"
+#include "mouse.h"
 #include "keys.h"
 #include <map>
 #include <vector>
 #include <string>
 
-
-// #include "keyboard.h"
-#include "mouse.h"
-
-// TODO: Platform specific stuff shouldn't be in this header
-// This is also preventing initializing the input manager through
-// application.h because of a circular dependency, altough it can be
-// fixed by using the .cpp file
-#include "./windows/windowskeyboard.h"
 
 // TODO: Static class or make it a singleton?
 class InputManager
@@ -54,7 +47,7 @@ public:
     {
         // TODO: Input Manager shouldn't be responsible for
         // instantiating platform specific handlers;
-        _keyboard = new WindowsKeyboard();
+        _keyboard = Keyboard::Create();
         cmds.clear();
 
         return true;

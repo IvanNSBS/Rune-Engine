@@ -6,9 +6,10 @@
 class WindowsKeyboard : public Keyboard
 {
 private:
+    friend class Keyboard;
     GLFWwindow* _wnd = nullptr;
+    WindowsKeyboard();
 
 public:
-    WindowsKeyboard();
     virtual bool IsKeyDown(int keycode) override;
 };

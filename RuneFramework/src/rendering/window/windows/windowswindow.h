@@ -5,12 +5,12 @@
 #include <GLFW/glfw3.h>
 #include "../window.h"
 
-
 class WindowsWindow : public Window
 {
 private:
     GLFWwindow* _window;
-    
+    friend class Window;
+
     static inline void default_frame_callback(GLFWwindow* wnd, int width, int height) {
         glViewport(0, 0, width, height);
     }
@@ -18,8 +18,7 @@ private:
     void Create(uint32_t width, uint32_t height, char* name);
     void CreateOpenGlContext();
     void CreateGladContext();
-
-public:
+    
     WindowsWindow(WindowProps props) 
     {
         _props = props;
@@ -27,18 +26,8 @@ public:
         Create(_props.width, _props.height, _props.title);
         CreateGladContext();
     }
-    
-    WindowsWindow(char* name, unsigned int width, unsigned int height) 
-    {
-        _props.title = name;
-        _props.width = width;
-        _props.height = height;
 
-        CreateOpenGlContext();
-        Create(width, height, name);
-        CreateGladContext();
-    }
-    
+public:
     ~WindowsWindow() {
         // TODO: Need delete _window?
         glfwSetWindowShouldClose(_window, true);

@@ -1,3 +1,5 @@
+#pragma once
+
 enum Key {
     SPACE              = 32,
     APOSTROPHE         = 39,  /* ' */

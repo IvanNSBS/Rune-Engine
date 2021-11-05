@@ -6,15 +6,10 @@
 #include "../filesystem/fileloader.h"
 #include "input/inputmanager.h"
 
-
-// TODO: Application Class shouldn't need to include platform specific stuff
-#include "../rendering/window/windows/windowswindow.h"
-
 class Application 
 {
 private:
     static inline Window* _window = nullptr;
-    // static inline InputManager* _inputmanager = nullptr;
 
     Application() { }
 
@@ -25,10 +20,9 @@ private:
 public:
     static void StartApp(int window_width, int window_height, char* window_name)
     {
-        // TODO: Add IFDEF clauses to switch between API and Window Contexts
-        #ifdef RUNE_PLATFORM_WINDOWS
-        Application::_window = new WindowsWindow(window_name, window_width, window_height);
-        #endif
+        WindowProps props(window_width, window_height, window_name,true);
+        Application::_window = Window::Create(props);
+
         FileLoader::Init();
         InputManager::Init();
     } 
