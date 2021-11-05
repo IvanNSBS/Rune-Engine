@@ -2,14 +2,16 @@
 
 #include "window.h"
 #include "../filesystem/fileloader.h"
+#include "input/inputmanager.h"
 
 // TODO: Application Class shouldn't need to include platform specific stuff
-#include "../platforms/window/windowswindow.h"
+#include "../platforms/windows/windowswindow.h"
 
 class Application 
 {
 private:
     static inline Window* _window = nullptr;
+    // static inline InputManager* _inputmanager = nullptr;
 
     Application() { }
 
@@ -23,9 +25,10 @@ public:
         // TODO: Add IFDEF clauses to switch between API and Window Contexts
         Application::_window = new WindowsWindow(window_name, window_width, window_height);
         FileLoader::Init();
+        InputManager::Init();
     } 
 
-    inline static  Window* GetWindow() { return _window; }
+    inline static Window* GetWindow() { return _window; }
 
     inline static bool Started() { return _window != nullptr; }
 

@@ -30,9 +30,8 @@ int main()
     // TODO: Make a CreateApp and Init Application Function. Perhaps 
     //       calling all inits could be done for the sandbox?
     Application::StartApp(SCR_WIDTH, SCR_HEIGHT, "Rune Renderer");
-    InputManager::Init();
     InputManager::RegisterCommand(&close);
-    InputManager::SetCommandKey(&close, Key::F10);
+    InputManager::SetCommandKey(&close, Key::F12);
 
     ShaderProgram program("df_shaders\\df_sh1.glsl");
 

@@ -1,20 +1,32 @@
 #pragma once
 
 #include "../application.h"
-#include "../../platforms/window/windowswindow.h"
 #include "inputcommand.h"
 #include "keys.h"
 #include <map>
 #include <vector>
 #include <string>
 
-class Application;
 
+// #include "keyboard.h"
+#include "mouse.h"
+
+// TODO: Platform specific stuff shouldn't be in this header
+// This is also preventing initializing the input manager through
+// application.h because of a circular dependency, altough it can be
+// fixed by using the .cpp file
+#include "../../platforms/windows/windowskeyboard.h"
+
+// TODO: Static class or make it a singleton?
 class InputManager
 {
 private:
-    static inline GLFWwindow* wnd = nullptr;
+    static inline Keyboard* _keyboard = nullptr;
+    static inline Mouse* _mouse = nullptr;
     static inline std::map<int, std::vector<InputCommand*>> cmds = {};
+
+    static inline GLFWwindow* wnd = nullptr;
+    
 
     static bool KeyExists(int key)
     {
@@ -40,10 +52,9 @@ private:
 public:
     static bool Init()
     {
-        Window* window = Application::GetWindow();
-        WindowsWindow* windowsWindow = static_cast<WindowsWindow*>(window);
-        wnd = windowsWindow->GetWindowHandler();
-
+        // TODO: Input Manager shouldn't be responsible for
+        // instantiating platform specific handlers;
+        _keyboard = new WindowsKeyboard();
         cmds.clear();
 
         return true;
@@ -82,8 +93,24 @@ public:
         return true;
     }
 
-    static bool WasKeyPressed(int keycode) {
-        return glfwGetKey(wnd, keycode) == GLFW_PRESS;    
+    static inline bool IsKeyPressed(int keycode) {
+        return _keyboard->IsKeyDown(keycode);
+    }
+
+    static inline float GetMouseX() {
+        return 0;
+    }
+
+    static inline float GetMouseY() {
+        return 0;
+    }
+    
+    static inline glm::vec2 GetMousePosition() {
+        return glm::vec2(0, 0);
+    }
+
+    static inline bool IsMouseButtonDown() {
+        return false;
     }
 
     static void HandleInputs() 
@@ -93,7 +120,7 @@ public:
             int keycode = cmd.first;
             std::vector<InputCommand*> commands = cmd.second;
 
-            if(WasKeyPressed(keycode))
+            if(IsKeyPressed(keycode))
                 for(const auto& command : commands)
                     command->Execute();
         }

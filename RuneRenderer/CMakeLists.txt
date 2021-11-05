@@ -5,8 +5,9 @@ project(RuneRenderer VERSION 0.1.0)
 add_executable(
     RuneRenderer 
     src/main.cpp 
-    src/platforms/window/windowswindow.cpp 
     src/shaders/shaderprogram.cpp 
+    src/platforms/windows/windowswindow.cpp 
+    src/platforms/windows/windowskeyboard.cpp 
 )
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
