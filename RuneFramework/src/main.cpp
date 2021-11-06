@@ -80,6 +80,10 @@ int main()
     // -----------
     while (!Application::ShouldClose())
     {
+        std::cout << "Time since last frame: " << Application::GetTime()->DeltaTimeMillis() << std::endl;
+        std::cout << "FPS: " << Application::GetTime()->CurrentFPS() << std::endl;
+        std::cout << "Time Elapsed: " << Application::GetTime()->Elapsed() << std::endl;
+
         // input
         // -----
         InputManager::HandleInputs();

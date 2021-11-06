@@ -5,6 +5,7 @@
 
 #include "../filesystem/fileloader.h"
 #include "input/inputmanager.h"
+#include "./time.h"
 
 namespace Rune
 {
@@ -12,16 +13,18 @@ namespace Rune
     {
     private:
         static inline Window* _window = nullptr;
-
+        static inline Time* _time = nullptr;
         Application() { }
 
         ~Application() {
             delete _window;
+            delete _time;
         }
 
     public:
         static void StartApp(int window_width, int window_height, char* window_name)
         {
+            _time = new Time();
             WindowProps props(window_width, window_height, window_name,true);
             Application::_window = Window::Create(props);
 
@@ -37,9 +40,12 @@ namespace Rune
 
         inline static void Close() { _window->Close(); }
 
+        inline static Time* GetTime() { return _time; }
+
         static void Update() 
         {
             _window->OnUpdate();
+            _time->Update();
         }
     };
 }
