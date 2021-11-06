@@ -5,11 +5,14 @@
     #include "./windows/windowswindow.h"
 #endif
 
-Window* Window::Create(WindowProps props) 
+namespace Rune 
 {
-    #ifdef RUNE_PLATFORM_WINDOWS
-        return new WindowsWindow(props);
-    #else
-        return nullptr;
-    #endif
+    Window* Window::Create(WindowProps props) 
+    {
+        #ifdef RUNE_PLATFORM_WINDOWS
+            return new WindowsWindow(props);
+        #else
+            return nullptr;
+        #endif
+    }
 }

@@ -5,11 +5,14 @@
     #include "./windows/windowskeyboard.h"
 #endif
 
-Keyboard* Keyboard::Create()
+namespace Rune
 {
-    #ifdef RUNE_PLATFORM_WINDOWS
-        return new WindowsKeyboard();
-    #else
-        return nullptr;
-    #endif
+    Keyboard* Keyboard::Create()
+    {
+        #ifdef RUNE_PLATFORM_WINDOWS
+            return new WindowsKeyboard();
+        #else
+            return nullptr;
+        #endif
+    }
 }

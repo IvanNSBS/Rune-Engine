@@ -6,37 +6,40 @@
 #include "../filesystem/fileloader.h"
 #include "input/inputmanager.h"
 
-class Application 
+namespace Rune
 {
-private:
-    static inline Window* _window = nullptr;
-
-    Application() { }
-
-    ~Application() {
-        delete _window;
-    }
-
-public:
-    static void StartApp(int window_width, int window_height, char* window_name)
+    class Application 
     {
-        WindowProps props(window_width, window_height, window_name,true);
-        Application::_window = Window::Create(props);
+    private:
+        static inline Window* _window = nullptr;
 
-        FileLoader::Init();
-        InputManager::Init();
-    } 
+        Application() { }
 
-    inline static Window* GetWindow() { return _window; }
+        ~Application() {
+            delete _window;
+        }
 
-    inline static bool Started() { return _window != nullptr; }
+    public:
+        static void StartApp(int window_width, int window_height, char* window_name)
+        {
+            WindowProps props(window_width, window_height, window_name,true);
+            Application::_window = Window::Create(props);
 
-    inline static bool ShouldClose() { return _window->ShouldClose(); }
+            FileLoader::Init();
+            InputManager::Init();
+        } 
 
-    inline static void Close() { _window->Close(); }
+        inline static Window* GetWindow() { return _window; }
 
-    static void Update() 
-    {
-        _window->OnUpdate();
-    }
-};
+        inline static bool Started() { return _window != nullptr; }
+
+        inline static bool ShouldClose() { return _window->ShouldClose(); }
+
+        inline static void Close() { _window->Close(); }
+
+        static void Update() 
+        {
+            _window->OnUpdate();
+        }
+    };
+}

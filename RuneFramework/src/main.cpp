@@ -8,6 +8,8 @@
 #include "application/input/inputmanager.h"
 #include "application/input/inputcommand.h"
 
+using namespace Rune;
+
 // settings
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;

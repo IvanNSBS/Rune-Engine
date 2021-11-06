@@ -1,40 +1,43 @@
 #include <glad.h>
 #include "windowswindow.h"
 
-void WindowsWindow::Create(uint32_t width, uint32_t height, char* name) 
+namespace Rune
 {
-    _window = glfwCreateWindow(width, height, name, NULL, NULL);
-    if (_window == NULL)
+    void WindowsWindow::Create(uint32_t width, uint32_t height, char* name) 
     {
-        std::cout << "Failed to create GLFW window" << std::endl;
-        glfwTerminate();
-        return;
+        _window = glfwCreateWindow(width, height, name, NULL, NULL);
+        if (_window == NULL)
+        {
+            std::cout << "Failed to create GLFW window" << std::endl;
+            glfwTerminate();
+            return;
+        }
     }
-}
 
-void WindowsWindow::CreateOpenGlContext() 
-{
-    glfwInit();
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-    #ifdef __APPLE__
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-    #endif
-}
-
-void WindowsWindow::CreateGladContext() 
-{
-    glfwMakeContextCurrent(_window);
-    glfwSetFramebufferSizeCallback(_window, WindowsWindow::default_frame_callback);
-    glfwSwapInterval(_props.vsync);
-    
-    // glad: load all OpenGL function pointers
-    // ---------------------------------------
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+    void WindowsWindow::CreateOpenGlContext() 
     {
-        std::cout << "Failed to initialize GLAD" << std::endl;
-        return;
+        glfwInit();
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+        #ifdef __APPLE__
+        glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+        #endif
+    }
+
+    void WindowsWindow::CreateGladContext() 
+    {
+        glfwMakeContextCurrent(_window);
+        glfwSetFramebufferSizeCallback(_window, WindowsWindow::default_frame_callback);
+        glfwSwapInterval(_props.vsync);
+        
+        // glad: load all OpenGL function pointers
+        // ---------------------------------------
+        if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+        {
+            std::cout << "Failed to initialize GLAD" << std::endl;
+            return;
+        }
     }
 }

@@ -1,16 +1,19 @@
 #pragma once
 
-class InputManager;
-
-class InputCommand 
+namespace Rune
 {
-private:
-    int _keycode;
+    class InputManager;
 
-public:
-    inline void const SetKey(int kc) { _keycode = kc; }
-    inline int const GetKey() const { return _keycode; }
-    virtual void Execute() = 0;
+    class InputCommand 
+    {
+    private:
+        int _keycode;
 
-    InputCommand(int keycode): _keycode(keycode) { }
-};
+    public:
+        inline void const SetKey(int kc) { _keycode = kc; }
+        inline int const GetKey() const { return _keycode; }
+        virtual void Execute() = 0;
+
+        InputCommand(int keycode): _keycode(keycode) { }
+    };
+}

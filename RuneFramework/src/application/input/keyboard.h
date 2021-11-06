@@ -1,9 +1,12 @@
 #pragma once
 
-class Keyboard 
+namespace Rune
 {
-public:
-    virtual bool IsKeyDown(int keycode) = 0;
+    class Keyboard 
+    {
+    public:
+        virtual bool IsKeyDown(int keycode) = 0;
 
-    static Keyboard* Create();
-};
+        static Keyboard* Create();
+    };
+}
