@@ -8,7 +8,7 @@
             "name": "Debugger.exe - Criar e depurar o arquivo ativo",
             "type": "cppvsdbg",
             "request": "launch",
-            "program": "_out/build/Debug/RuneRenderer.exe",
+            "program": "_out/build/Debug/RuneApplication.exe",
             "cwd": "${workspaceRoot}",
             // "console": "externalTerminal",
             "preLaunchTask": "build debug",

@@ -1,3 +1,3 @@
 #! /bin/sh
 
-./_out/build/Release/RuneFramework.exe
+./_out/build/Release/RuneApplication.exe
