@@ -1,12 +1,4 @@
-#include <glad.h>
-#include <GLFW/glfw3.h>
-
-#include <iostream>
-#include "filesystem/fileloader.h"
-#include "application/application.h"
-#include "rendering/shaders/shaderprogram.h"
-#include "application/input/inputmanager.h"
-#include "application/input/inputcommand.h"
+#include "rune.h"
 
 using namespace Rune;
 
@@ -80,9 +72,9 @@ int main()
     // -----------
     while (!Application::ShouldClose())
     {
-        std::cout << "Time since last frame: " << Application::GetTime()->DeltaTimeMillis() << std::endl;
-        std::cout << "FPS: " << Application::GetTime()->CurrentFPS() << std::endl;
-        std::cout << "Time Elapsed: " << Application::GetTime()->Elapsed() << std::endl;
+        // std::cout << "Time since last frame: " << Application::GetTime()->DeltaTimeMillis() << std::endl;
+        // std::cout << "FPS: " << Application::GetTime()->CurrentFPS() << std::endl;
+        // std::cout << "Time Elapsed: " << Application::GetTime()->Elapsed() << std::endl;
 
         // input
         // -----
