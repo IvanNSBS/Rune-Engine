@@ -10,6 +10,7 @@ add_executable(
     src/rendering/window/windows/windowswindow.cpp 
 
     src/application/input/keyboard.cpp 
+    src/application/input/inputmanager.cpp 
     src/application/input/windows/windowskeyboard.cpp 
 )
 

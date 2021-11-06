@@ -1,3 +1,4 @@
+#include <glad.h>
 #include "windowswindow.h"
 
 void WindowsWindow::Create(uint32_t width, uint32_t height, char* name) 
