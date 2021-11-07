@@ -52,7 +52,7 @@ namespace Rune
 		{
 			unsigned int typeSize = sizeof(GLuint);
 
-			_layoutData.push_back((void*)CreateLayout(typeSize, GL_INT, count));
+			_layoutData.push_back((void*)CreateLayout(typeSize, GL_UNSIGNED_INT, count));
 			_stride += typeSize * count;
 		} 
 
@@ -60,7 +60,7 @@ namespace Rune
 		{
 			unsigned int typeSize = sizeof(GLfloat);
 
-			_layoutData.push_back((void*)CreateLayout(typeSize, GL_INT, count));
+			_layoutData.push_back((void*)CreateLayout(typeSize, GL_FLOAT, count));
 			_stride += typeSize * count;
 		}
 
@@ -68,7 +68,7 @@ namespace Rune
 		{
 			unsigned int typeSize = sizeof(GLbyte);
 
-			_layoutData.push_back((void*)CreateLayout(typeSize, GL_INT, count));
+			_layoutData.push_back((void*)CreateLayout(typeSize, GL_BYTE, count));
 			_stride += typeSize * count;
 		}
 		

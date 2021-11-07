@@ -5,6 +5,8 @@
 #include "../indexbuffer.h"
 #include "../vertexbuffer.h"
 
+#include <iostream>
+
 namespace Rune
 {
     class OGLVertexBuffer : public VertexBuffer
@@ -31,23 +33,18 @@ namespace Rune
         virtual void Bind() override
         {
             glBindVertexArray(_vaoBufferId);
-            glBindBuffer(GL_ARRAY_BUFFER, _vboBufferId);
-            if(HasIndices())
-                _index->Bind();
         }
 
         virtual void Unbind() override
         {
             glBindVertexArray(0);
-		    glBindBuffer(GL_ARRAY_BUFFER, 0);
-            if(HasIndices())
-                _index->Unbind();
         }
 
         // TODO: Interface should consider buffer type: e.g: GL_STATIC_DRAW
         virtual void SetData(const void* data, unsigned int dataByteSize, VertexLayout* layout) override
         {
-            this->Bind();
+            Bind();
+            glBindBuffer(GL_ARRAY_BUFFER, _vboBufferId);
             glBufferData(GL_ARRAY_BUFFER, dataByteSize, data, GL_STATIC_DRAW);
 
             auto layoutData = layout->GetLayoutData();
@@ -56,18 +53,18 @@ namespace Rune
 
             for(int i = 0; i < layoutData.size(); i++)
             {
-                OGLDataLayout data = reinterpret_cast<OGLDataLayout&>(layoutData[i]);
+                OGLDataLayout* element = reinterpret_cast<OGLDataLayout*>(layoutData[i]);
 
-                glVertexAttribPointer(i, data.typeCount, data.type, data.normalized, stride, (void*)(uintptr_t)offset);
+                glVertexAttribPointer(i, element->typeCount, element->type, element->normalized, stride, (void*)(uintptr_t)offset);
                 glEnableVertexAttribArray(i);
-                offset += data.offset;
+                offset += element->offset;
             }
+
+            glBindBuffer(GL_ARRAY_BUFFER, 0);
         }
 
         virtual void SetIndices(IndexBuffer* index) override
         {
-            Bind();
-            index->Bind();
             _index = index;
         }
 
