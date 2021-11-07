@@ -6,5 +6,7 @@
 
 #include "application/application.h"
 #include "rendering/shaders/shaderprogram.h"
+#include "rendering/buffers/vertexbuffer.h"
+#include "rendering/buffers/vertexlayout.h"
 
 #include <iostream>

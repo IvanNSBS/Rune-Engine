@@ -15,6 +15,12 @@ public:
     }
 };
 
+struct PosCol
+{
+    float x, y, z;
+    float r, g, b;
+};
+
 int main()
 {
     std::cout << "Starting the app...\n";
@@ -33,11 +39,11 @@ int main()
 
     // set up vertex data (and buffer(s)) and configure vertex attributes
     // ------------------------------------------------------------------
-    float vertices[] = {
-         0.5f,  0.5f, 0.0f,  // top right
-         0.5f, -0.5f, 0.0f,  // bottom right
-        -0.5f, -0.5f, 0.0f,  // bottom left
-        -0.5f,  0.5f, 0.0f   // top left 
+    PosCol vertices[] = {
+         0.5f,  0.5f, 0.0f,  1.0f, 0.0f, 0.0f, // top right
+         0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f, // bottom right
+        -0.5f, -0.5f, 0.0f,  0.0f, 0.0f, 1.0f, // bottom left
+        -0.5f,  0.5f, 0.0f,  1.0f, 1.0f, 0.0f  // top left 
     };
     unsigned int indices[] = {  // note that we start from 0!
         0, 1, 3,  // first Triangle
@@ -51,15 +57,19 @@ int main()
     glBindVertexArray(VAO);
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(PosCol)*4, vertices, GL_STATIC_DRAW);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
+    void* type = (void*)GL_FLOAT;
 
-    // note that this is allowed, the call to glVertexAttribPointer registered VBO as the vertex attribute's bound vertex buffer object so afterwards we can safely unbind
+    glVertexAttribPointer(0, 3, (GLenum)(size_t)type, GL_FALSE, sizeof(PosCol), (void*)0);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(PosCol), (void*)(3*sizeof(float)));
+    glEnableVertexAttribArray(0);
+    glEnableVertexAttribArray(1);
+
+    // no3*sizeof(floatte that this is allowed, the call to glVertexAttribPointer registered VBO as the vertex attribute's bound vertex buffer object so afterwards we can safely unbind
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
     // remember: do NOT unbind the EBO while a VAO is active as the bound element buffer object IS stored in the VAO; keep the EBO bound.
@@ -67,6 +77,19 @@ int main()
 
     // VAOs requires a call to glBindVertexArray anyways so we generally don't unbind VAOs (nor VBOs) when it's not directly necessary.
     glBindVertexArray(0);
+
+    VertexLayout* layout = VertexLayout::Create();
+    layout->PushFloat(3); // position
+    layout->PushFloat(3); // colors
+
+    VertexBuffer* buf = VertexBuffer::Create();
+    IndexBuffer* idxs = IndexBuffer::Create();
+    idxs->SetData(indices, sizeof(indices));
+
+    buf->SetData(vertices, sizeof(PosCol)*4, layout);
+    buf->SetIndices(idxs);
+    buf->Unbind();
+
 
     // render loop
     // -----------
@@ -86,8 +109,9 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT);
 
         program.Use();
-        glBindVertexArray(VAO);
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        buf->Bind();
+        // glBindVertexArray(VAO);
+        glDrawElements(GL_TRIANGLES, buf->GetIndices()->Length(), GL_UNSIGNED_INT, 0);
 
         Application::Update();
     }

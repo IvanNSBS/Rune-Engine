@@ -7,6 +7,7 @@ add_library(
     src/rendering/shaders/shaderprogram.cpp 
     src/rendering/window/window.cpp 
     src/rendering/window/windows/windowswindow.cpp 
+    src/rendering/buffers/buffers.cpp 
 
     src/application/input/keyboard.cpp 
     src/application/input/inputmanager.cpp 
