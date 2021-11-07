@@ -10,6 +10,7 @@ namespace Rune
         std::vector<void*> _layoutData;
 
     public:
+        virtual ~VertexLayout() = 0;
         inline std::vector<void*> GetLayoutData() { return _layoutData; }
         virtual unsigned int GetLayoutSize() const = 0;
 

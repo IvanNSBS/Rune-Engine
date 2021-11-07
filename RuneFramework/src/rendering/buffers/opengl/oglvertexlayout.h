@@ -19,53 +19,56 @@ namespace Rune
     private:
 		unsigned int _stride;
 
-		inline OGLDataLayout CreateLayout(unsigned int typeSize, GLenum type, unsigned int count)
+		inline OGLDataLayout* CreateLayout(unsigned int typeSize, GLenum type, unsigned int count)
 		{
-			OGLDataLayout layout;
-			layout.type = type;
-			layout.typeCount = count;
-			layout.normalized = GL_FALSE;
-			layout.offset = typeSize*count;
+			OGLDataLayout* layout = new OGLDataLayout();
+
+			layout->type = type;
+			layout->typeCount = count;
+			layout->normalized = GL_FALSE;
+			layout->offset = typeSize*count;
 
 			return layout;
 		}
 
     public:
+		~OGLVertexLayout()
+		{
+			for(size_t i = _layoutData.size(); i >= 0; i--)
+				delete _layoutData[i];
+		}
+
 		virtual unsigned int GetLayoutSize() const override { return _stride; }
 
         virtual void PushInt(unsigned int count)
 		{	
 			unsigned int typeSize = sizeof(GLint);
-			OGLDataLayout layout = CreateLayout(typeSize, GL_INT, count);
 
-			_layoutData.push_back((void*)&layout);
+			_layoutData.push_back((void*)CreateLayout(typeSize, GL_INT, count));
 			_stride += typeSize * count;
 		}
 
         virtual void PushUInt(unsigned int count) override
 		{
 			unsigned int typeSize = sizeof(GLuint);
-			OGLDataLayout layout = CreateLayout(typeSize, GL_UNSIGNED_INT, count);
 
-			_layoutData.push_back((void*)&layout);
+			_layoutData.push_back((void*)CreateLayout(typeSize, GL_INT, count));
 			_stride += typeSize * count;
 		} 
 
 		virtual void PushFloat(unsigned int count) override
 		{
 			unsigned int typeSize = sizeof(GLfloat);
-			OGLDataLayout layout = CreateLayout(typeSize, GL_FLOAT, count);
 
-			_layoutData.push_back((void*)&layout);
+			_layoutData.push_back((void*)CreateLayout(typeSize, GL_INT, count));
 			_stride += typeSize * count;
 		}
 
         virtual void PushChar(unsigned int count) override
 		{
 			unsigned int typeSize = sizeof(GLbyte);
-			OGLDataLayout layout = CreateLayout(typeSize, GL_BYTE, count);
 
-			_layoutData.push_back((void*)&layout);
+			_layoutData.push_back((void*)CreateLayout(typeSize, GL_INT, count));
 			_stride += typeSize * count;
 		}
 		

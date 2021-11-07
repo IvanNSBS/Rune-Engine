@@ -23,6 +23,7 @@ namespace Rune
         #endif
     }
 
+    VertexLayout::~VertexLayout() { }
     VertexLayout* VertexLayout::Create()
     {
         #ifdef RUNE_PLATFORM_WINDOWS
