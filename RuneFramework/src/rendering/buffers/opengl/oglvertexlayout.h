@@ -34,8 +34,13 @@ namespace Rune
     public:
 		~OGLVertexLayout()
 		{
-			for(size_t i = _layoutData.size(); i >= 0; i--)
-				delete _layoutData[i];
+			while(!_layoutData.empty())
+			{
+				delete _layoutData.back();
+				_layoutData.pop_back();
+			}
+
+			_layoutData.clear();
 		}
 
 		virtual unsigned int GetLayoutSize() const override { return _stride; }
