@@ -8,6 +8,9 @@ add_library(
     src/rendering/window/window.cpp 
     src/rendering/window/windows/windowswindow.cpp 
     src/rendering/buffers/buffers.cpp 
+    src/rendering/buffers/opengl/oglindexbuffer.cpp 
+    src/rendering/buffers/opengl/oglvertexbuffer.cpp 
+    src/rendering/buffers/opengl/oglvertexlayout.cpp 
 
     src/application/input/keyboard.cpp 
     src/application/input/inputmanager.cpp 
