@@ -12,6 +12,10 @@ namespace Rune
         IndexBuffer* indices;
 
         Shape() {}
+        ~Shape(){
+            delete vertices;
+            delete indices;
+        }
         Shape(VertexBuffer* verts, IndexBuffer* idxs): vertices(verts), indices(idxs) {}
     };
 }

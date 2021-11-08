@@ -56,6 +56,7 @@ namespace Rune
             vert->SetData(vertices, sizeof(vertices), l);
             vert->SetIndices(idxs);
 
+            delete l;
             return new Shape(vert, idxs);
         }
     };
