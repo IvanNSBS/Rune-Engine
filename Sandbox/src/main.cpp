@@ -27,8 +27,6 @@ int main()
     std::cout << "Starting the app...\n";
 
     CloseCommand close(Key::ESCAPE);
-    // TODO: Make a CreateApp and Init Application Function. Perhaps 
-    //       calling all inits could be done for the sandbox?
     Application::StartApp(SCR_WIDTH, SCR_HEIGHT, "Rune Renderer");
     InputManager::RegisterCommand(&close);
 
