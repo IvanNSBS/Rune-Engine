@@ -96,33 +96,10 @@ int main()
     bool success = program.Compile();
     program.Use();
 
-    // set up vertex data (and buffer(s)) and configure vertex attributes
-    // ------------------------------------------------------------------
-    PosCol vertices[] = {
-         0.5f,  0.5f, 0.0f, 1.0f, 0.0f, 0.0f, // top right
-         0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, // bottom right
-        -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, // bottom left
-        -0.5f,  0.5f, 0.0f, 0.0f, 1.0f, 0.0f  // top left 
-    };
-    unsigned int indices[] = {  // note that we start from 0!
-        0, 1, 3,  // first Triangle
-        1, 2, 3   // second Triangle
-    };
-
-    VertexLayout* layout = VertexLayout::Create();
-    layout->PushFloat(3); // position
-    layout->PushFloat(3); // color
-    VertexBuffer* buf = VertexBuffer::Create();
-    IndexBuffer* idx = IndexBuffer::Create();
-    buf->Bind();
-    buf->SetData(vertices, sizeof(vertices), layout);
-    idx->SetData(indices, sizeof(indices));
-    buf->SetIndices(idx);
-    
     Camera::CreateOrtho(coords, orthoSize, 0.0001f, 10000.0f, proj);
 
     Renderer2D renderer;
-    Shape* rect = Rect::CreateRect(1.f, .5f); 
+    Shape* rect = Rect::CreateRect(1.f, 1.f); 
 
     renderer.Submit(rect, &program);
 
@@ -143,20 +120,12 @@ int main()
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        // program.Use();
-        // // buf->Bind();
-        // rect->vertices->Bind();
-        // glDrawElements(GL_TRIANGLES, rect->indices->Length(), GL_UNSIGNED_INT, 0);
-
         renderer.Render(coords.position, proj);
 
         Application::Update();
     }
 
-    delete buf;
-    delete idx;
-    delete layout;
-
+    // TODO: This terminate should be abstracted by the API
     // glfw: terminate, clearing all previously allocated GLFW resources.
     // ------------------------------------------------------------------
     glfwTerminate();

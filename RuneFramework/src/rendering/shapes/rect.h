@@ -14,8 +14,8 @@ namespace Rune
     };
 
     unsigned int indices[] = {  
-        0, 1, 3,  // first Triangle
-        1, 2, 3   // second Triangle
+        0, 1, 2,  // first Triangle
+        1, 3, 2   // second Triangle
     };
 
     float vertices[] = {
@@ -39,10 +39,10 @@ namespace Rune
             float w = width * 0.5f;
 
             float vertices[] = {
-                 h,  h, 1.0f, 1.0f, // top-left
-                 h, -h, 1.0f, 0.0f, // bottom-left
-                -h, -h, 0.0f, 0.0f, // top-right
-                -h,  h, 0.0f, 1.0f  // bottom-right
+                -w,  h, 1.0f, 1.0f, // top-left
+                -w, -h, 1.0f, 0.0f, // bottom-left
+                 w,  h, 0.0f, 0.0f, // top-right
+                 w, -h, 0.0f, 1.0f  // bottom-right
             };
 
             VertexLayout* l = VertexLayout::Create();
