@@ -1,6 +1,6 @@
-[submodule "RuneRenderer/vendor/glfw"]
-	path = RuneRenderer/vendor/glfw
+[submodule "RuneFramework/vendor/glfw"]
+	path = RuneFramework/vendor/glfw
 	url = https://github.com/glfw/glfw.git
-[submodule "RuneRenderer/vendor/glm"]
-	path = RuneRenderer/vendor/glm
+[submodule "RuneFramework/vendor/glm"]
+	path = RuneFramework/vendor/glm
 	url = https://github.com/g-truc/glm.git

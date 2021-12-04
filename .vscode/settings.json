@@ -74,5 +74,6 @@
         "inputmanager.h": "c",
         "inputcommand.h": "c",
         "windowswindow.h": "c"
-    }
+    },
+    "C_Cpp.intelliSenseEngineFallback": "Disabled"
 }

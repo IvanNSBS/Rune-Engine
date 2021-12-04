@@ -4,17 +4,20 @@ project(RuneFramework VERSION 0.1.0)
 
 add_library(
     RuneFramework STATIC
-    src/rendering/shaders/shaderprogram.cpp 
-    src/rendering/window/window.cpp 
-    src/rendering/window/windows/windowswindow.cpp 
-    src/rendering/buffers/buffers.cpp 
-    src/rendering/buffers/opengl/oglindexbuffer.cpp 
-    src/rendering/buffers/opengl/oglvertexbuffer.cpp 
-    src/rendering/buffers/opengl/oglvertexlayout.cpp 
 
-    src/application/input/keyboard.cpp 
-    src/application/input/inputmanager.cpp 
-    src/application/input/windows/windowskeyboard.cpp 
+    src/api/input/keyboard.cpp 
+    src/api/input/inputmanager.cpp 
+
+    src/api/rendering/shaders/shaderprogram.cpp 
+    src/api/rendering/window/window.cpp 
+    src/api/rendering/buffers/buffers.cpp 
+    
+    src/platforms/windows/input/windowskeyboard.cpp 
+    src/platforms/windows/window/windowswindow.cpp
+
+    src/platforms/opengl/oglindexbuffer.cpp 
+    src/platforms/opengl/oglvertexbuffer.cpp 
+    src/platforms/opengl/oglvertexlayout.cpp 
 )
 
 add_definitions(-DGLFW_BUILD_DOCS=OFF)
