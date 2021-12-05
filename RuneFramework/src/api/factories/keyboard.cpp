@@ -1,4 +1,4 @@
-#include "./keyboard.h"
+#include "../input/keyboard.h"
 #include "../../platformdetector.h"
 
 #ifdef RUNE_PLATFORM_WINDOWS

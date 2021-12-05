@@ -1,13 +1,13 @@
-#include "../../../platformdetector.h"
+#include "../../platformdetector.h"
 
-#include "./vertexbuffer.h"
-#include "./vertexlayout.h"
-#include "./indexbuffer.h"
+#include "../rendering/buffers/vertexbuffer.h"
+#include "../rendering/buffers/vertexlayout.h"
+#include "../rendering/buffers/indexbuffer.h"
 
 #ifdef RUNE_PLATFORM_WINDOWS
-    #include "../../../platforms/opengl/oglvertexbuffer.h"
-    #include "../../../platforms/opengl/oglvertexlayout.h"
-    #include "../../../platforms/opengl/oglindexbuffer.h"
+    #include "../../platforms/opengl/oglvertexbuffer.h"
+    #include "../../platforms/opengl/oglvertexlayout.h"
+    #include "../../platforms/opengl/oglindexbuffer.h"
 #endif
 
 namespace Rune

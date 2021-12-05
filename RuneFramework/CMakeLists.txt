@@ -4,14 +4,13 @@ project(RuneFramework VERSION 0.1.0)
 
 add_library(
     RuneFramework STATIC
+    src/api/factories/window.cpp 
+    src/api/factories/buffers.cpp 
+    src/api/factories/keyboard.cpp 
 
-    src/api/input/keyboard.cpp 
     src/api/input/inputmanager.cpp 
-
     src/api/rendering/shaders/shaderprogram.cpp 
-    src/api/rendering/window/window.cpp 
-    src/api/rendering/buffers/buffers.cpp 
-    
+
     src/platforms/windows/input/windowskeyboard.cpp 
     src/platforms/windows/window/windowswindow.cpp
 
