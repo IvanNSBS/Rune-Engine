@@ -20,8 +20,14 @@ namespace Rune
 
         }
 
+        static std::string GetWorkspaceDir()
+        {
+            std::string r = "";
+            return fs::current_path().string();
+        }
+
         static std::string GetAssetFolderPath() {
-            return "C:\\Users\\ivans\\Desktop\\Projetos\\Rune-Engine\\RuneFramework\\resources";
+            return GetWorkspaceDir() + "\\RuneFramework\\resources";
         }
 
         static void RegisterAssetFiles() {

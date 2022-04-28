@@ -75,5 +75,6 @@
         "inputcommand.h": "c",
         "windowswindow.h": "c"
     },
-    "C_Cpp.intelliSenseEngineFallback": "Disabled"
+    "C_Cpp.intelliSenseEngineFallback": "Disabled",
+    "cmake.configureOnOpen": false
 }
