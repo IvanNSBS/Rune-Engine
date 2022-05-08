@@ -5,11 +5,10 @@ project(RuneFramework VERSION 0.1.0)
 add_library(
     RuneFramework STATIC
     src/api/factories/window.cpp 
-    src/api/factories/buffers.cpp 
+    src/api/factories/rendering.cpp 
     src/api/factories/keyboard.cpp 
 
     src/api/input/inputmanager.cpp 
-    src/api/rendering/shaders/shaderprogram.cpp 
 
     src/platforms/windows/input/windowskeyboard.cpp 
     src/platforms/windows/window/windowswindow.cpp
@@ -17,6 +16,7 @@ add_library(
     src/platforms/opengl/oglindexbuffer.cpp 
     src/platforms/opengl/oglvertexbuffer.cpp 
     src/platforms/opengl/oglvertexlayout.cpp 
+    src/platforms/opengl/oglshaderprogram.cpp 
 )
 
 add_definitions(-DGLFW_BUILD_DOCS=OFF)
@@ -34,5 +34,7 @@ target_include_directories(
     ${PROJECT_NAME} PRIVATE vendor/glfw
     ${PROJECT_NAME} PRIVATE vendor/glm/glm
 )
+
+include_directories(src)
 
 target_link_libraries(${PROJECT_NAME} glfw glad glm)

@@ -91,17 +91,17 @@ int main()
     InputManager::RegisterCommand(&s);
     InputManager::RegisterCommand(&d);
 
-    ShaderProgram program("df_shaders\\df_sh1.glsl");
+    ShaderProgram* program = ShaderProgram::Create("df_shaders\\df_sh1.glsl");
 
-    bool success = program.Compile();
-    program.Use();
+    bool success = program->Compile();
+    program->Use();
 
     Camera::CreateOrtho(coords, orthoSize, 0.0001f, 10000.0f, proj);
 
     Renderer2D renderer;
     Shape* rect = Rect::CreateRect(1.f, 1.f); 
 
-    renderer.Submit(rect, &program);
+    renderer.Submit(rect, program);
 
     // render loop
     // -----------

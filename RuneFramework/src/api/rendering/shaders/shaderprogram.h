@@ -11,34 +11,26 @@ namespace Rune
 {
     class ShaderProgram
     {
-    private:
-        unsigned int m_programId;
-        bool m_compiled;
-        std::string m_filePath;
-        std::unordered_map<std::string, int> m_uniformLocations;
-
-        bool CheckForCompileErrors(const unsigned int shader, unsigned int type) const;
-        const int GetAndCacheUniform(const std::string& name);
     public:
-        ShaderProgram(const char* shaderFilePath);
-        ~ShaderProgram();
-        void Use();
+        static ShaderProgram* Create(const char* shaderFilePath);
+        virtual ~ShaderProgram() = 0;
+        virtual void Use() = 0;
 
-        bool Compile();
-        void setInt(const std::string& name, int value);
-        void setBool(const std::string& name, bool value);
-        void setFloat(const std::string& name, float value);
+        virtual bool Compile() = 0;
+        virtual void setInt(const std::string& name, int value) = 0;
+        virtual void setBool(const std::string& name, bool value) = 0;
+        virtual void setFloat(const std::string& name, float value) = 0;
 
-        void SetVec2(const std::string& name, float x, float y);
-        void SetVec3(const std::string& name, float x, float y, float z);
-        void SetVec4(const std::string& name, float x, float y, float z, float w);
+        virtual void SetVec2(const std::string& name, float x, float y) = 0;
+        virtual void SetVec3(const std::string& name, float x, float y, float z) = 0;
+        virtual void SetVec4(const std::string& name, float x, float y, float z, float w) = 0;
 
-        void SetVec2(const std::string& name, const glm::vec2& value);
-        void SetVec3(const std::string& name, const glm::vec3& value);
-        void SetVec4(const std::string& name, const glm::vec4& value);
+        virtual void SetVec2(const std::string& name, const glm::vec2& value) = 0;
+        virtual void SetVec3(const std::string& name, const glm::vec3& value) = 0;
+        virtual void SetVec4(const std::string& name, const glm::vec4& value) = 0;
 
-        void SetMat2(const std::string& name, const glm::mat2& mat);
-        void SetMat3(const std::string& name, const glm::mat3& mat);
-        void SetMat4(const std::string& name, const glm::mat4& mat);
+        virtual void SetMat2(const std::string& name, const glm::mat2& mat) = 0;
+        virtual void SetMat3(const std::string& name, const glm::mat3& mat) = 0;
+        virtual void SetMat4(const std::string& name, const glm::mat4& mat) = 0;
     };
 }

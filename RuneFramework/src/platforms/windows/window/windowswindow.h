@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include <GLFW/glfw3.h>
-#include "../../../api/rendering/window/window.h"
+#include "api/rendering/window/window.h"
 
 namespace Rune 
 {

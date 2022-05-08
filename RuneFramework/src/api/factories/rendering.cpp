@@ -1,13 +1,15 @@
-#include "../../platformdetector.h"
+#include "platformdetector.h"
 
-#include "../rendering/buffers/vertexbuffer.h"
-#include "../rendering/buffers/vertexlayout.h"
-#include "../rendering/buffers/indexbuffer.h"
+#include "api/rendering/buffers/vertexbuffer.h"
+#include "api/rendering/buffers/vertexlayout.h"
+#include "api/rendering/buffers/indexbuffer.h"
+#include "api/rendering/shaders/shaderprogram.h"
 
 #ifdef RUNE_PLATFORM_WINDOWS
-    #include "../../platforms/opengl/oglvertexbuffer.h"
-    #include "../../platforms/opengl/oglvertexlayout.h"
-    #include "../../platforms/opengl/oglindexbuffer.h"
+    #include "platforms/opengl/oglvertexbuffer.h"
+    #include "platforms/opengl/oglvertexlayout.h"
+    #include "platforms/opengl/oglindexbuffer.h"
+    #include "platforms/opengl/oglshaderprogram.h"
 #endif
 
 namespace Rune
@@ -43,5 +45,16 @@ namespace Rune
             #error "Platform does not support VertexLayout!"
             return nullptr;
         #endif 
+    }
+
+    ShaderProgram::~ShaderProgram(){ }
+    ShaderProgram* ShaderProgram::Create(const char* shaderFilePath)
+    {
+        #ifdef RUNE_PLATFORM_WINDOWS
+            return new OGLShaderProgram(shaderFilePath);
+        #else
+            #error "Platform does not support VertexLayout!"
+            return nullptr;
+        #endif
     }
 };
