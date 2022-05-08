@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../buffers/indexbuffer.h"
-#include "../buffers/vertexbuffer.h"
+#include "api/rendering/buffers/indexbuffer.h"
+#include "api/rendering/buffers/vertexbuffer.h"
 #include "./shape.h"
 
 namespace Rune

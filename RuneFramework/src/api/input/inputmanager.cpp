@@ -1,7 +1,7 @@
 #pragma once
 
 #include "./inputmanager.h"
-#include "../application.h"
+#include "api/application.h"
 
 namespace Rune
 {

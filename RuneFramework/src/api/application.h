@@ -1,11 +1,11 @@
 #pragma once
 
-#include "../platformdetector.h"
-#include "./rendering/window/window.h"
+#include "time.h"
+#include "platformdetector.h"
 
-#include "./filesystem/fileloader.h"
-#include "input/inputmanager.h"
-#include "./time.h"
+#include "api/rendering/window/window.h"
+#include "api/filesystem/fileloader.h"
+#include "api/input/inputmanager.h"
 
 namespace Rune
 {

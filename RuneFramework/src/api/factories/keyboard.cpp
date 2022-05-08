@@ -1,5 +1,5 @@
-#include "../input/keyboard.h"
-#include "../../platformdetector.h"
+#include "api/input/keyboard.h"
+#include "platformdetector.h"
 
 #ifdef RUNE_PLATFORM_WINDOWS
     #include "../../platforms/windows/input/windowskeyboard.h"
