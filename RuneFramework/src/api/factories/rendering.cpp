@@ -48,7 +48,7 @@ namespace Rune
     }
 
     ShaderProgram::~ShaderProgram(){ }
-    ShaderProgram* ShaderProgram::Create(const char* shaderFilePath)
+    ShaderProgram* ShaderProgram::Load(const char* shaderFilePath)
     {
         #ifdef RUNE_PLATFORM_WINDOWS
             return new OGLShaderProgram(shaderFilePath);

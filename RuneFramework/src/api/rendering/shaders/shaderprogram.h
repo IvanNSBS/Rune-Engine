@@ -12,7 +12,7 @@ namespace Rune
     class ShaderProgram
     {
     public:
-        static ShaderProgram* Create(const char* shaderFilePath);
+        static ShaderProgram* Load(const char* shaderFilePath);
         virtual ~ShaderProgram() = 0;
         virtual void Use() = 0;
 

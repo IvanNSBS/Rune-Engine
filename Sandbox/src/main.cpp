@@ -91,7 +91,7 @@ int main()
     InputManager::RegisterCommand(&s);
     InputManager::RegisterCommand(&d);
 
-    ShaderProgram* program = ShaderProgram::Create("df_shaders\\df_sh1.glsl");
+    ShaderProgram* program = ShaderProgram::Load("df_shaders\\df_sh1.glsl");
 
     bool success = program->Compile();
     program->Use();
