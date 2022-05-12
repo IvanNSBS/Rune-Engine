@@ -103,6 +103,14 @@ int main()
 
     renderer.Submit(rect, program);
 
+    EventSystem* evtsSystem = new EventSystem();
+    EventListener listener = [](IEvent& evt) { std::cout << "Listener received event!\n"; };
+    evtsSystem->Subscribe(0, listener); 
+
+    evtsSystem->Invoke(Rune::WindowResizedEvent(1000, 800));
+    evtsSystem->Invoke(Rune::WindowResizedEvent(800, 600));
+    delete evtsSystem;
+
     // render loop
     // -----------
     while (!Application::ShouldClose())
@@ -110,7 +118,7 @@ int main()
         // std::cout << "Time since last frame: " << Application::GetTime()->DeltaTimeMillis() << std::endl;
         // std::cout << "FPS: " << Application::GetTime()->CurrentFPS() << std::endl;
         // std::cout << "Time Elapsed: " << Application::GetTime()->Elapsed() << std::endl;
-        std::cout << "Pos: (" << coords.position.x << ", " << coords.position.y << ", " << coords.position.z << ")\n";
+        // std::cout << "Pos: (" << coords.position.x << ", " << coords.position.y << ", " << coords.position.z << ")\n";
         // input
         // -----
         InputManager::HandleInputs();

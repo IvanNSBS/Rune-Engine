@@ -12,5 +12,8 @@
 #include "api/rendering/shapes/shape.h"
 #include "api/rendering/cameras/camera.h"
 #include "api/rendering/renderer2d.h"
+#include "api/eventsystem/event.h"
+#include "api/eventsystem/eventsystem.h"
+#include "api/eventsystem/windowresizedevent.h"
 
 #include <iostream>

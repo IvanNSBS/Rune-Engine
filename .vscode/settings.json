@@ -76,5 +76,6 @@
         "windowswindow.h": "c"
     },
     "C_Cpp.intelliSenseEngineFallback": "Disabled",
-    "cmake.configureOnOpen": false
+    "cmake.configureOnOpen": false,
+    "C_Cpp.errorSquiggles": "Enabled"
 }
