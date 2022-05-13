@@ -54,9 +54,11 @@ namespace Rune
             }
         }
 
-        void Invoke(IEvent& event)
+        template<typename TEventType>
+        void Invoke(TEventType& event)
         {
-            typeOf evtId = &typeid(event);
+            ASSERT_IS_EVENT(TEventType);
+            typeOf evtId = &typeid(TEventType);
 
             if(_listeners.count(evtId))
             {
