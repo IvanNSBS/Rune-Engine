@@ -8,7 +8,6 @@ namespace Rune
     class IEvent
     {
     public:
-        virtual unsigned int id() = 0;
         virtual ~IEvent() { }
     };
 }

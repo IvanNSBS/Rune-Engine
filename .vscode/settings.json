@@ -73,9 +73,12 @@
         "window.h": "c",
         "inputmanager.h": "c",
         "inputcommand.h": "c",
-        "windowswindow.h": "c"
+        "windowswindow.h": "c",
+        "mutex": "cpp",
+        "stop_token": "cpp",
+        "thread": "cpp"
     },
     "C_Cpp.intelliSenseEngineFallback": "Disabled",
     "cmake.configureOnOpen": false,
-    "C_Cpp.errorSquiggles": "Enabled"
+    "C_Cpp.errorSquiggles": "Enabled",
 }

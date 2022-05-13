@@ -1,31 +1,34 @@
 #pragma once
 
 #include "event.h"
-#include <vector>
-#include <functional>
 #include <map>
-#include "windowresizedevent.h"
 #include <iostream>
+#include <typeinfo>
+#include <type_traits>
+#include "windowresizedevent.h"
 
 namespace Rune
 {
-    enum Events
-    {
-        MouseMoved = 0,
-        WindowResized = 1,
-        KeyPressed = 2,
-        KeyHeld = 3,
-        KeyReleased = 4,
-    };
-
     #define EventListener std::function<void(IEvent&)>
-    // typedef std::function<void(IEvent*)> EventListener;
+    #define ASSERT_IS_EVENT(TYPE) static_assert(std::is_base_of<IEvent, TYPE>::value, "Template must be of IEvent")
+    typedef const std::type_info* typeOf;
 
     class EventSystem
     {
     public:
-        void Subscribe(unsigned int evtId, EventListener listener)
+        void PollEvents()
         {
+            
+        }
+
+        template<typename TEventType>
+        void Subscribe(EventListener listener)
+        {
+            ASSERT_IS_EVENT(TEventType);
+            typeOf evtId = &typeid(TEventType);
+            
+            std::cout << "Subscribing to event <" << evtId->name() << ">\n";
+
             if(_listeners.count(evtId))
             {
                 _listeners.at(evtId).push_back(listener);
@@ -38,8 +41,12 @@ namespace Rune
             }
         }
 
-        void Unsubscribe(unsigned int evtId, EventListener listener)
+        template<typename TEventType>
+        void Unsubscribe(EventListener listener)
         {
+            ASSERT_IS_EVENT(TEventType);
+            typeOf evtId = &typeid(TEventType);
+
             if(_listeners.count(evtId))
             {
                 std::vector<EventListener>* listeners = &_listeners.at(evtId);
@@ -49,19 +56,27 @@ namespace Rune
 
         void Invoke(IEvent& event)
         {
-            if(_listeners.count(event.id()))
+            typeOf evtId = &typeid(event);
+
+            if(_listeners.count(evtId))
             {
-                for(EventListener listener : _listeners[event.id()])
+                for(EventListener listener : _listeners[evtId])
                 {
                     listener(event);
                 }
             }
         }
 
-        int SubCount(unsigned int eventId) 
+        template<typename TEventType>
+        int SubCount() 
         {
-            if(_listeners.count(eventId))
-                return _listeners.at(eventId).size();
+            ASSERT_IS_EVENT(TEventType);
+            typeOf evtId = &typeid(TEventType);
+
+            if(_listeners.count(evtId))
+            {
+                return _listeners.at(evtId).size();
+            }
 
             return 0; 
         }
@@ -69,18 +84,18 @@ namespace Rune
         EventSystem()
         {
             EventListener listener = std::bind(&EventSystem::Test, this, std::placeholders::_1);
-            std::cout << "Initial Subcount: " << SubCount(0) << "\n";
-            Subscribe(0, listener);
-            std::cout << "New Subcount: " << SubCount(0) << "\n";
+            std::cout << "Initial Subcount: " << SubCount<WindowResizedEvent>() << "\n";
+            Subscribe<WindowResizedEvent>(listener);
+            std::cout << "New Subcount: " << SubCount<WindowResizedEvent>() << "\n";
         }
         ~EventSystem()
         {
             
-            std::cout << "Final Subcount: " << SubCount(0);
+            std::cout << "Final Subcount: " << SubCount<WindowResizedEvent>();
         }
 
     private:
-        std::map<unsigned int, std::vector<EventListener>> _listeners;
+        std::map<typeOf, std::vector<EventListener>> _listeners;
 
         void Test(IEvent& evt) 
         {

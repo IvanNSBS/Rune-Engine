@@ -105,7 +105,7 @@ int main()
 
     EventSystem* evtsSystem = new EventSystem();
     EventListener listener = [](IEvent& evt) { std::cout << "Listener received event!\n"; };
-    evtsSystem->Subscribe(0, listener); 
+    evtsSystem->Subscribe<WindowResizedEvent>(listener); 
 
     evtsSystem->Invoke(Rune::WindowResizedEvent(1000, 800));
     evtsSystem->Invoke(Rune::WindowResizedEvent(800, 600));
