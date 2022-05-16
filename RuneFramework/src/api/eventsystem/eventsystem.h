@@ -60,7 +60,7 @@ namespace Rune
         }
 
         template<typename TEventType>
-        void Invoke(TEventType& event)
+        void Invoke(TEventType event)
         {
             ASSERT_IS_EVENT(TEventType);
             typeOf evtId = &typeid(TEventType);
