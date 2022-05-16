@@ -1,13 +1,12 @@
 #pragma once
 
-#include "event.h"
 #include <map>
 #include <iostream>
 #include <typeinfo>
 #include <algorithm>
 #include <type_traits>
-#include "windowresizedevent.h"
-#include "eventlistener.h"
+#include "event.h"
+#include "eventcallback.h"
 
 namespace Rune
 {
@@ -23,32 +22,32 @@ namespace Rune
         }
 
         template<typename TEventType>
-        void Subscribe(EventSubscriber<TEventType>* listener)
+        void AddCallback(EventCallback<TEventType>* listener)
         {
             ASSERT_IS_EVENT(TEventType);
             typeOf evtId = &typeid(TEventType);
             
             if(_listeners.count(evtId))
             {
-                _listeners.at(evtId).push_back(static_cast<IEventListener*>(listener));
+                _listeners.at(evtId).push_back(static_cast<IEventCallback*>(listener));
             }
             else
             {
-                std::vector<IEventListener*> listeners;
-                listeners.push_back(static_cast<IEventListener*>(listener));
+                std::vector<IEventCallback*> listeners;
+                listeners.push_back(static_cast<IEventCallback*>(listener));
                 _listeners[evtId] = listeners;
             }
         }
 
         template<typename TEventType>
-        void Unsubscribe(EventSubscriber<TEventType>* listener)
+        void RemoveCallback(EventCallback<TEventType>* listener)
         {
             ASSERT_IS_EVENT(TEventType);
             typeOf evtId = &typeid(TEventType);
 
             if(_listeners.count(evtId))
             {
-                std::vector<IEventListener*>* callbacks = &_listeners.at(evtId);
+                std::vector<IEventCallback*>* callbacks = &_listeners.at(evtId);
                 for(size_t i = callbacks->size() - 1; i >= 0; i--)
                 {
                     if(listener->ID() == callbacks->at(i)->ID())
@@ -70,7 +69,7 @@ namespace Rune
             {
                 for(size_t i = 0; i < _listeners[evtId].size(); i++)
                 {
-                    auto sub = static_cast<EventSubscriber<TEventType>*>(_listeners.at(evtId).at(i));
+                    auto sub = static_cast<EventCallback<TEventType>*>(_listeners.at(evtId).at(i));
                     sub->Invoke(event);
                 }
             }
@@ -88,31 +87,7 @@ namespace Rune
             return 0; 
         }
 
-        EventSystem()
-        {
-            listener = new EventSubscriber<WindowResizedEvent>(
-                [](IEvent& x) {
-                    // std::cout << "Width: " << x.Width() << ", Height: " << x.Height() << "\n";
-                }
-            );
-
-            std::cout << "Initial Subcount: " << SubCount<WindowResizedEvent>() << "\n";
-            Subscribe(listener);
-            std::cout << "New Subcount: " << SubCount<WindowResizedEvent>() << "\n";
-        }
-        ~EventSystem()
-        {
-            Unsubscribe(listener);
-            std::cout << "Final Subcount: " << SubCount<WindowResizedEvent>();
-        }
-
     private:
-        std::map<typeOf, std::vector<IEventListener*>> _listeners;
-        EventSubscriber<WindowResizedEvent>* listener;
-
-        void Test(WindowResizedEvent& resize) 
-        {
-            std::cout << "Width: " << resize.Width() << ", Height: " << resize.Height() << "\n";
-        }
+        std::map<typeOf, std::vector<IEventCallback*>> _listeners;
     };
 }

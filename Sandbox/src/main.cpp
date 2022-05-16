@@ -104,6 +104,12 @@ int main()
     renderer.Submit(rect, program);
 
     EventSystem* evtsSystem = new EventSystem();
+    EventCallback<WindowResizedEvent>* listener = new EventCallback<WindowResizedEvent>(
+        [](WindowResizedEvent& x) {
+            std::cout << "Width: " << x.Width() << ", Height: " << x.Height() << "\n";
+        }
+    );
+    evtsSystem->AddCallback(listener);
     evtsSystem->Invoke(Rune::WindowResizedEvent(1000, 800));
     delete evtsSystem;
 

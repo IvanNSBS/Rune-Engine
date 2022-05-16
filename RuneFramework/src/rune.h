@@ -14,6 +14,7 @@
 #include "api/rendering/renderer2d.h"
 #include "api/eventsystem/event.h"
 #include "api/eventsystem/eventsystem.h"
+#include "api/eventsystem/eventcallback.h"
 #include "api/eventsystem/windowresizedevent.h"
 
 #include <iostream>

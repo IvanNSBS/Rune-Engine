@@ -7,28 +7,28 @@ namespace Rune
 {
     unsigned int listener_id = 0;
 
-    class IEventListener
+    class IEventCallback
     {
     protected:
         unsigned int _id;
 
     public:
-        virtual ~IEventListener() { };
+        virtual ~IEventCallback() { };
         unsigned int ID() { return _id; }
-        friend bool operator==(const IEventListener& l, const IEventListener& r)
+        friend bool operator==(const IEventCallback& l, const IEventCallback& r)
         {
             return l._id == r._id;
         }
     };
 
     template<typename TEvent>
-    class EventSubscriber : public IEventListener
+    class EventCallback : public IEventCallback
     {
     private:
         std::function<void(TEvent&)> _clbk;
 
     public:
-        EventSubscriber(std::function<void(TEvent&)> clbk)
+        EventCallback(std::function<void(TEvent&)> clbk)
         {
             static_assert(std::is_base_of<IEvent, TEvent>::value, "Template must be of IEvent type");
             _clbk = clbk;
