@@ -1,23 +1,41 @@
 #pragma once
 
 #include "event.h"
-#include <vector>
-#include <functional>
+#include <type_traits>
 
 namespace Rune
 {
-    template<typename TEvent>
+    unsigned int listener_id = 0;
+
     class IEventListener
     {
-    private:
+    protected:
         unsigned int _id;
+
     public:
-        IEventListener(unsigned int eventId)
+        virtual ~IEventListener() { };
+        unsigned int ID() { return _id; }
+        friend bool operator==(const IEventListener& l, const IEventListener& r)
         {
-            static_assert(std::is_base_of<IEvent, TEvent>>::value, "Template must be of IEvent type");
+            return l._id == r._id;
+        }
+    };
+
+    template<typename TEvent>
+    class EventSubscriber : public IEventListener
+    {
+    private:
+        std::function<void(TEvent&)> _clbk;
+
+    public:
+        EventSubscriber(std::function<void(TEvent&)> clbk)
+        {
+            static_assert(std::is_base_of<IEvent, TEvent>::value, "Template must be of IEvent type");
+            _clbk = clbk;
+            _id = listener_id + 1;
+            listener_id = _id;
         }
 
-        virtual ~IEventListener();
-        virtual void Invoke(TEvent& evt) = asd0;
+        void Invoke(TEvent& evt) { _clbk(evt); }
     };
 }

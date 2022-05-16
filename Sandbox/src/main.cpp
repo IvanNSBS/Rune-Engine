@@ -104,11 +104,7 @@ int main()
     renderer.Submit(rect, program);
 
     EventSystem* evtsSystem = new EventSystem();
-    EventListener listener = [](IEvent& evt) { std::cout << "Listener received event!\n"; };
-    evtsSystem->Subscribe<WindowResizedEvent>(listener); 
-
     evtsSystem->Invoke(Rune::WindowResizedEvent(1000, 800));
-    evtsSystem->Invoke(Rune::WindowResizedEvent(800, 600));
     delete evtsSystem;
 
     // render loop

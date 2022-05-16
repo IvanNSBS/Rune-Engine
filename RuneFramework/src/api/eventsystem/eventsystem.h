@@ -4,12 +4,13 @@
 #include <map>
 #include <iostream>
 #include <typeinfo>
+#include <algorithm>
 #include <type_traits>
 #include "windowresizedevent.h"
+#include "eventlistener.h"
 
 namespace Rune
 {
-    #define EventListener std::function<void(IEvent&)>
     #define ASSERT_IS_EVENT(TYPE) static_assert(std::is_base_of<IEvent, TYPE>::value, "Template must be of IEvent")
     typedef const std::type_info* typeOf;
 
@@ -22,35 +23,40 @@ namespace Rune
         }
 
         template<typename TEventType>
-        void Subscribe(EventListener listener)
+        void Subscribe(EventSubscriber<TEventType>* listener)
         {
             ASSERT_IS_EVENT(TEventType);
             typeOf evtId = &typeid(TEventType);
             
-            std::cout << "Subscribing to event <" << evtId->name() << ">\n";
-
             if(_listeners.count(evtId))
             {
-                _listeners.at(evtId).push_back(listener);
+                _listeners.at(evtId).push_back(static_cast<IEventListener*>(listener));
             }
             else
             {
-                std::vector<EventListener> listeners;
-                listeners.push_back(listener);
+                std::vector<IEventListener*> listeners;
+                listeners.push_back(static_cast<IEventListener*>(listener));
                 _listeners[evtId] = listeners;
             }
         }
 
         template<typename TEventType>
-        void Unsubscribe(EventListener listener)
+        void Unsubscribe(EventSubscriber<TEventType>* listener)
         {
             ASSERT_IS_EVENT(TEventType);
             typeOf evtId = &typeid(TEventType);
 
             if(_listeners.count(evtId))
             {
-                std::vector<EventListener>* listeners = &_listeners.at(evtId);
-                // listeners->erase(std::remove(listeners->begin(), listeners->end(), listener), listeners->end());
+                std::vector<IEventListener*>* callbacks = &_listeners.at(evtId);
+                for(size_t i = callbacks->size() - 1; i >= 0; i--)
+                {
+                    if(listener->ID() == callbacks->at(i)->ID())
+                    {
+                        callbacks->erase(callbacks->begin() + i);
+                        break;
+                    }
+                }
             }
         }
 
@@ -60,48 +66,52 @@ namespace Rune
             ASSERT_IS_EVENT(TEventType);
             typeOf evtId = &typeid(TEventType);
 
-            if(_listeners.count(evtId))
+            if(_listeners.count(evtId) && _listeners.at(evtId).size() > 0)
             {
-                for(EventListener listener : _listeners[evtId])
+                for(size_t i = 0; i < _listeners[evtId].size(); i++)
                 {
-                    listener(event);
+                    auto sub = static_cast<EventSubscriber<TEventType>*>(_listeners.at(evtId).at(i));
+                    sub->Invoke(event);
                 }
             }
         }
 
         template<typename TEventType>
-        int SubCount() 
+        size_t SubCount() 
         {
             ASSERT_IS_EVENT(TEventType);
             typeOf evtId = &typeid(TEventType);
 
             if(_listeners.count(evtId))
-            {
                 return _listeners.at(evtId).size();
-            }
 
             return 0; 
         }
 
         EventSystem()
         {
-            EventListener listener = std::bind(&EventSystem::Test, this, std::placeholders::_1);
+            listener = new EventSubscriber<WindowResizedEvent>(
+                [](IEvent& x) {
+                    // std::cout << "Width: " << x.Width() << ", Height: " << x.Height() << "\n";
+                }
+            );
+
             std::cout << "Initial Subcount: " << SubCount<WindowResizedEvent>() << "\n";
-            Subscribe<WindowResizedEvent>(listener);
+            Subscribe(listener);
             std::cout << "New Subcount: " << SubCount<WindowResizedEvent>() << "\n";
         }
         ~EventSystem()
         {
-            
+            Unsubscribe(listener);
             std::cout << "Final Subcount: " << SubCount<WindowResizedEvent>();
         }
 
     private:
-        std::map<typeOf, std::vector<EventListener>> _listeners;
+        std::map<typeOf, std::vector<IEventListener*>> _listeners;
+        EventSubscriber<WindowResizedEvent>* listener;
 
-        void Test(IEvent& evt) 
+        void Test(WindowResizedEvent& resize) 
         {
-            WindowResizedEvent resize = dynamic_cast<WindowResizedEvent&>(evt);
             std::cout << "Width: " << resize.Width() << ", Height: " << resize.Height() << "\n";
         }
     };
