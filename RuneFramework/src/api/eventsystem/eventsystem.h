@@ -7,6 +7,10 @@
 #include <type_traits>
 #include "event.h"
 #include "eventcallback.h"
+#include "windowresizedevent.h"
+
+#define BIND(member_pointer) std::bind(member_pointer, this, std::placeholders::_1)
+#define TYPEOF(x) &typeid(x)
 
 namespace Rune
 {
@@ -22,10 +26,10 @@ namespace Rune
         }
 
         template<typename TEventType>
-        void AddCallback(EventCallback<TEventType>* listener)
+        void AddCallback(explicit EventCallback<TEventType>* listener)
         {
             ASSERT_IS_EVENT(TEventType);
-            typeOf evtId = &typeid(TEventType);
+            typeOf evtId = TYPEOF(TEventType);
             
             if(_listeners.count(evtId))
             {
@@ -40,10 +44,19 @@ namespace Rune
         }
 
         template<typename TEventType>
+        EventCallback<TEventType>* AddCallback(std::function<void(TEventType&)> func)
+        {
+            EventCallback<TEventType>* evt = new EventCallback<TEventType>(func);
+            AddCallback(evt);
+
+            return evt;
+        }
+
+        template<typename TEventType>
         void RemoveCallback(EventCallback<TEventType>* listener)
         {
             ASSERT_IS_EVENT(TEventType);
-            typeOf evtId = &typeid(TEventType);
+            typeOf evtId = TYPEOF(TEventType);
 
             if(_listeners.count(evtId))
             {
@@ -63,7 +76,7 @@ namespace Rune
         void Invoke(TEventType event)
         {
             ASSERT_IS_EVENT(TEventType);
-            typeOf evtId = &typeid(TEventType);
+            typeOf evtId = TYPEOF(TEventType);
 
             if(_listeners.count(evtId) && _listeners.at(evtId).size() > 0)
             {
@@ -79,7 +92,7 @@ namespace Rune
         size_t SubCount() 
         {
             ASSERT_IS_EVENT(TEventType);
-            typeOf evtId = &typeid(TEventType);
+            typeOf evtId = TYPEOF(TEventType);
 
             if(_listeners.count(evtId))
                 return _listeners.at(evtId).size();
