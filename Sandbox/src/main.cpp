@@ -73,7 +73,6 @@ struct PosCol
 };
 
 int main()
-
 {
     std::cout << "Starting the app...\n";
 

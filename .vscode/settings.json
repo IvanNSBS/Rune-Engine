@@ -76,7 +76,8 @@
         "windowswindow.h": "c",
         "mutex": "cpp",
         "stop_token": "cpp",
-        "thread": "cpp"
+        "thread": "cpp",
+        "typeindex": "cpp"
     },
     "C_Cpp.intelliSenseEngineFallback": "Disabled",
     "cmake.configureOnOpen": false,
