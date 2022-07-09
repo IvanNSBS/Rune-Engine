@@ -6,24 +6,27 @@
 
 namespace Rune
 {
-
     unsigned int listener_id;
+
     class IEventCallback
     {
     protected:
-        std::string _uid;
+        bool IsSametype(const IEventCallback* clbk) const
+		{
+			if(!clbk || typeid(*this) != typeid(*clbk))
+				return false;
+
+			return true;
+		}
 
     public:
         virtual ~IEventCallback() { };
-        const std::string ID() const { return _uid; }
+        virtual bool CompareTo(const IEventCallback* clbk) const = 0;
+
         friend bool operator==(const IEventCallback& l, const IEventCallback& r)
         {
-            return l._uid == r._uid;
-        }
-
-        friend bool operator==(const IEventCallback& l, const std::string& r)
-        {
-            return l._uid == r;
+            // return l.CompareTo(&r);
+            return false;
         }
     };
 
@@ -31,24 +34,57 @@ namespace Rune
     class EventCallback : public IEventCallback
     {
     private:
-        std::function<void(TEvent&)> _clbk;
+        void(*_clbk)(TEvent);
 
     public:
-        EventCallback(explicit std::function<void(TEvent&)> clbk)
+        EventCallback(void(*clbk)(TEvent))
         {
             static_assert(std::is_base_of<IEvent, TEvent>::value, "Template must be of IEvent type");
             _clbk = clbk;
-            _uid = std::to_string(++listener_id);
         }
+        ~EventCallback() { }
 
-        EventCallback(explicit std::function<void(TEvent&)> clbk, std::string id)
+        virtual void Invoke(TEvent& evt) { _clbk(evt); }
+
+        bool CompareTo(const IEventCallback* clbk) const override
+        {
+            if(!IsSametype(clbk))
+                return false;
+
+			const EventCallback<TEvent>* castedEvt = dynamic_cast<const EventCallback<TEvent>*>(clbk);
+            return castedEvt->_clbk == this->_clbk;
+        }
+    };
+
+    template<typename Class, typename TEvent>
+    class MemberFuncEventCallback : public EventCallback<TEvent>
+    {
+    private:
+        Class* _instance;
+        void(Class::*_member_func)(TEvent);
+
+    public:
+        MemberFuncEventCallback(void(Class::*member_func)(TEvent), Class* instance) : EventCallback(nullptr)
         {
             static_assert(std::is_base_of<IEvent, TEvent>::value, "Template must be of IEvent type");
+            _instance = instance;
+            _member_func = member_func;
+        }
+        ~MemberFuncEventCallback() { }
 
-            _uid = id;
-            _clbk = clbk;
+        void Invoke(TEvent& evt) override 
+        {
+            if(_instance)
+                (_instance->*_member_func)(evt);
         }
 
-        void Invoke(TEvent& evt) { _clbk(evt); }
+        bool CompareTo(const IEventCallback* clbk) const override
+        {
+            if(!IsSametype(clbk))
+                return false;
+
+			const MemberFuncEventCallback<Class, TEvent>* castedEvt = dynamic_cast<const MemberFuncEventCallback<Class, TEvent>*>(clbk);
+            return this->_instance == castedEvt->_instance && castedEvt->_member_func == this->_member_func;
+        }
     };
 }

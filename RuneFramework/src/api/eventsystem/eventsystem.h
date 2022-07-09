@@ -10,73 +10,97 @@
 #include "eventcallback.h"
 #include "windowresizedevent.h"
 
-#define TEST_STR(thing) std::string(#thing)
 #define TYPEOF(x) &typeid(x)
-#define RUNE_METHOD_CALLBACK(method, target) method_info(method, target, #method)
-// #define RUNE_LAMBDA_CALLBACK(lambda) 
 
 namespace Rune
 {
     #define ASSERT_IS_EVENT(TYPE) static_assert(std::is_base_of<IEvent, TYPE>::value, "Template must be of IEvent")
     typedef const std::type_info* typeOf;
 
-    template<typename Class, typename Args>
-    struct method_info
-    {
-        std::string method_name;
-        Class* target;
-        void(Class::*method_ptr)(Args);
-
-        method_info(void(Class::*func)(Args), Class* target, std::string func_name)
-        {
-            method_ptr = func;
-            target = target;
-            method_name = func_name;
-
-            auto index = method_name.find_last_of("::");
-            if(index != -1)
-                method_name.erase(0, index+1);
-        }
-    };
-
     class EventSystem
     {
     public:
-        void test(WindowResizedEvent x) { 
-            std::cout << "TESTING! Width: " << x.Width() << ", Height: " << x.Height() << "\n";
-        }
-
         void PollEvents()
         {
 
-            BindMethod(RUNE_METHOD_CALLBACK(&EventSystem::test, this));
-            UnbindMethod(RUNE_METHOD_CALLBACK(&EventSystem::test, this));
         }
 
-        EventSystem()
+        ~EventSystem()
         {
-            PollEvents();
+            for(auto it = _listeners.begin(); it != _listeners.end(); it++)
+            {
+                for(size_t i = it->second.size(); i-- > 0;)
+                {
+                    delete it->second.at(i);
+                    it->second.pop_back();
+                }
+            }
         }
 
-        template<typename TEventType, class Class>
-        void BindMethod(method_info<Class, TEventType> info)
+        template<typename TEvt, class Class>
+        void Bind(void(Class::*member_func)(TEvt), Class* instance)
         {
-            auto func = std::bind(info.method_ptr, info.target, std::placeholders::_1);
-            EventCallback<TEventType>* evt = new EventCallback<TEventType>(func, info.method_name);
-            AddCallback<TEventType>(evt);
+            EventCallback<TEvt>* evt = new MemberFuncEventCallback<Class, TEvt>(member_func, instance);
+            AddCallback(evt);
         }
 
-        template<typename TEventType, typename Class>
-        void UnbindMethod(method_info<Class, TEventType> info)
+        template<typename TEvt>
+        void Bind(void(*foo)(TEvt))
         {
-            std::cout << "Unbinding callback with ID: " << info.method_name << std::endl;
+            EventCallback<TEvt>* clbk = new EventCallback<TEvt>(foo);
+            AddCallback(clbk);
         }
 
-        template<typename TEventType>
-        void AddCallback(EventCallback<TEventType>* listener)
+        template<typename TEvt, typename Class>
+        bool Unbind(void(Class::*member_func)(TEvt), Class* instance)
         {
-            ASSERT_IS_EVENT(TEventType);
-            typeOf evtId = TYPEOF(TEventType);
+            std::unique_ptr<EventCallback<TEvt>> clbk = std::make_unique<MemberFuncEventCallback<Class, TEvt>>(member_func, instance);
+            return RemoveCallback<TEvt>(clbk.get()); 
+        }
+
+        template<typename TEvt>
+        bool Unbind(void(*foo)(TEvt))
+        {
+            std::unique_ptr<EventCallback<TEvt>> clbk = std::make_unique<EventCallback<TEvt>>(foo);
+            return RemoveCallback<TEvt>(clbk.get()); 
+        }
+
+        template<typename TEvt>
+        void Invoke(TEvt event)
+        {
+            ASSERT_IS_EVENT(TEvt);
+            typeOf evtId = TYPEOF(TEvt);
+
+            if(_listeners.count(evtId) && _listeners.at(evtId).size() > 0)
+            {
+                for(size_t i = 0; i < _listeners[evtId].size(); i++)
+                {
+                    auto sub = static_cast<EventCallback<TEvt>*>(_listeners.at(evtId).at(i));
+                    sub->Invoke(event);
+                }
+            }
+        }
+
+    private:
+        std::map<typeOf, std::vector<IEventCallback*>> _listeners;
+
+        template<typename TEvt>
+        size_t SubCount() 
+        {
+            ASSERT_IS_EVENT(TEvt);
+            typeOf evtId = TYPEOF(TEvt);
+
+            if(_listeners.count(evtId))
+                return _listeners.at(evtId).size();
+
+            return 0; 
+        }
+
+        template<typename TEvt>
+        void AddCallback(EventCallback<TEvt>* listener)
+        {
+            ASSERT_IS_EVENT(TEvt);
+            typeOf evtId = TYPEOF(TEvt);
             
             if(_listeners.count(evtId))
             {
@@ -90,55 +114,30 @@ namespace Rune
             }
         }
 
-        template<typename TEventType>
-        void RemoveCallback(EventCallback<TEventType>* listener)
+        template<typename TEvt>
+        bool RemoveCallback(EventCallback<TEvt>* listener)
         {
-            ASSERT_IS_EVENT(TEventType);
-            typeOf evtId = TYPEOF(TEventType);
+            ASSERT_IS_EVENT(TEvt);
+            typeOf evtId = TYPEOF(TEvt);
 
+            bool result = false;
             if(_listeners.count(evtId))
             {
                 std::vector<IEventCallback*>* callbacks = &_listeners.at(evtId);
                 for(size_t i = callbacks->size() - 1; i >= 0; i--)
                 {
-                    if(listener->ID() == callbacks->at(i)->ID())
+                    if(listener->CompareTo(callbacks->at(i)))
                     {
+                        IEventCallback* toRemove = callbacks->at(i);
                         callbacks->erase(callbacks->begin() + i);
+                        result = true;
+                        delete toRemove;
                         break;
                     }
                 }
             }
+
+            return result;
         }
-
-        template<typename TEventType>
-        void Invoke(TEventType event)
-        {
-            ASSERT_IS_EVENT(TEventType);
-            typeOf evtId = TYPEOF(TEventType);
-
-            if(_listeners.count(evtId) && _listeners.at(evtId).size() > 0)
-            {
-                for(size_t i = 0; i < _listeners[evtId].size(); i++)
-                {
-                    auto sub = static_cast<EventCallback<TEventType>*>(_listeners.at(evtId).at(i));
-                    sub->Invoke(event);
-                }
-            }
-        }
-
-        template<typename TEventType>
-        size_t SubCount() 
-        {
-            ASSERT_IS_EVENT(TEventType);
-            typeOf evtId = TYPEOF(TEventType);
-
-            if(_listeners.count(evtId))
-                return _listeners.at(evtId).size();
-
-            return 0; 
-        }
-
-    private:
-        std::map<typeOf, std::vector<IEventCallback*>> _listeners;
     };
 }
