@@ -8,7 +8,6 @@
 #include <memory>
 #include "event.h"
 #include "eventcallback.h"
-#include "windowresizedevent.h"
 
 #define TYPEOF(x) &typeid(x)
 
@@ -20,11 +19,6 @@ namespace Rune
     class EventSystem
     {
     public:
-        void PollEvents()
-        {
-
-        }
-
         ~EventSystem()
         {
             for(auto it = _listeners.begin(); it != _listeners.end(); it++)
@@ -38,30 +32,30 @@ namespace Rune
         }
 
         template<typename TEvt, class Class>
-        void Bind(void(Class::*member_func)(TEvt), Class* instance)
+        inline void Bind(void(Class::*member_func)(TEvt), Class* instance)
         {
-            EventCallback<TEvt>* evt = new MemberFuncEventCallback<Class, TEvt>(member_func, instance);
-            AddCallback(evt);
+            IEventCallback* evt = new MemberFuncCallback<Class, TEvt>(member_func, instance);
+            AddCallback<TEvt>(evt);
         }
 
         template<typename TEvt>
-        void Bind(void(*foo)(TEvt))
+        inline void Bind(void(*foo)(TEvt))
         {
-            EventCallback<TEvt>* clbk = new EventCallback<TEvt>(foo);
-            AddCallback(clbk);
+            IEventCallback* clbk = new FuncCallback<TEvt>(foo);
+            AddCallback<TEvt>(clbk);
         }
 
         template<typename TEvt, typename Class>
-        bool Unbind(void(Class::*member_func)(TEvt), Class* instance)
+        inline bool Unbind(void(Class::*member_func)(TEvt), Class* instance)
         {
-            std::unique_ptr<EventCallback<TEvt>> clbk = std::make_unique<MemberFuncEventCallback<Class, TEvt>>(member_func, instance);
+            std::unique_ptr<IEventCallback> clbk = std::make_unique<MemberFuncCallback<Class, TEvt>>(member_func, instance);
             return RemoveCallback<TEvt>(clbk.get()); 
         }
 
         template<typename TEvt>
-        bool Unbind(void(*foo)(TEvt))
+        inline bool Unbind(void(*foo)(TEvt))
         {
-            std::unique_ptr<EventCallback<TEvt>> clbk = std::make_unique<EventCallback<TEvt>>(foo);
+            std::unique_ptr<IEventCallback> clbk = std::make_unique<FuncCallback<TEvt>>(foo);
             return RemoveCallback<TEvt>(clbk.get()); 
         }
 
@@ -75,7 +69,7 @@ namespace Rune
             {
                 for(size_t i = 0; i < _listeners[evtId].size(); i++)
                 {
-                    auto sub = static_cast<EventCallback<TEvt>*>(_listeners.at(evtId).at(i));
+                    auto sub = static_cast<BaseEventCallback<TEvt>*>(_listeners.at(evtId).at(i));
                     sub->Invoke(event);
                 }
             }
@@ -97,47 +91,42 @@ namespace Rune
         }
 
         template<typename TEvt>
-        void AddCallback(EventCallback<TEvt>* listener)
+        void AddCallback(IEventCallback* listener)
         {
             ASSERT_IS_EVENT(TEvt);
             typeOf evtId = TYPEOF(TEvt);
             
             if(_listeners.count(evtId))
-            {
-                _listeners.at(evtId).push_back(static_cast<IEventCallback*>(listener));
-            }
+                _listeners.at(evtId).push_back(listener);
             else
-            {
-                std::vector<IEventCallback*> listeners;
-                listeners.push_back(static_cast<IEventCallback*>(listener));
-                _listeners[evtId] = listeners;
-            }
+                _listeners[evtId] = std::vector<IEventCallback*>{listener};
         }
 
         template<typename TEvt>
-        bool RemoveCallback(EventCallback<TEvt>* listener)
+        bool RemoveCallback(IEventCallback* listener)
         {
             ASSERT_IS_EVENT(TEvt);
             typeOf evtId = TYPEOF(TEvt);
 
-            bool result = false;
+            bool removed = false;
             if(_listeners.count(evtId))
             {
                 std::vector<IEventCallback*>* callbacks = &_listeners.at(evtId);
                 for(size_t i = callbacks->size() - 1; i >= 0; i--)
                 {
-                    if(listener->CompareTo(callbacks->at(i)))
+                    if(listener == callbacks->at(i))
                     {
                         IEventCallback* toRemove = callbacks->at(i);
                         callbacks->erase(callbacks->begin() + i);
-                        result = true;
+                        removed = true;
+
                         delete toRemove;
                         break;
                     }
                 }
             }
 
-            return result;
+            return removed;
         }
     };
 }

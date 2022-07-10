@@ -72,6 +72,11 @@ struct PosCol
     float r, g, b;
 };
 
+void ResizeEventTest(Rune::WindowResizedEvent x)
+{
+    std::cout << "Received Resize Event!\n";
+}
+
 int main()
 {
     std::cout << "Starting the app...\n";
@@ -103,6 +108,8 @@ int main()
     renderer.Submit(rect, program);
 
     EventSystem* evtsSystem = new EventSystem();
+    evtsSystem->Bind(*ResizeEventTest);
+    evtsSystem->Invoke(WindowResizedEvent(1000, 800));
     delete evtsSystem;
 
     // render loop
